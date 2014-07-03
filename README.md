@@ -36,4 +36,4 @@ utils
 
 author
 --------
-Matt Delhey: [email](mailto:matt.delhey@rice.edu), [website](mattdelhey.com).
+Matt Delhey: [email](mailto:matt.delhey@rice.edu), [website](www.mattdelhey.com).
