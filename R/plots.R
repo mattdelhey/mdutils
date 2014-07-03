@@ -6,7 +6,8 @@ qhist <- function(x) {
 }
 
 #' @title ggcolor
-#' @description Recreate ggplot2 colors for arbitrary number of factors (stackoverflow). http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette
+#' @description Recreate ggplot2 colors for arbitrary number of factors (stackoverflow).
+#' See: http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette
 #' @export
 ggcolor <- function(n) {
     hues = seq(15, 375, length=n+1)

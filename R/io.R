@@ -1,18 +1,19 @@
-#' read_query
-#' http://stackoverflow.com/questions/3580532/r-read-contents-of-text-file-as-a-query
+#' @title read_query
+#' @description See: http://stackoverflow.com/questions/3580532/r-read-contents-of-text-file-as-a-query
 #' @export
 read_query <- function(file) {
     paste(readLines(file), collapse="\n")
 }
 
-#' clear_all
+#' @title clear_all
+#' @description TBD
 #' @export
 clear_all <- function() {
     rm(list = ls())
 }
 
-#' unload
-#' http://stackoverflow.com/questions/6979917/how-to-unload-a-package-without-restarting-r
+#' @title unload
+#' @description See: http://stackoverflow.com/questions/6979917/how-to-unload-a-package-without-restarting-r
 #' @export
 unload <- function(package) {
     name <- paste0("package:", deparse(substitute(package)))
