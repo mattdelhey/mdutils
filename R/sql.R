@@ -12,9 +12,9 @@ read_query <- function(file, header = NULL) {
 #' @description Collapse R vector for use with sql. Default output is string vector.
 #' @export
 collapse_vec <- function(x, type = c("character", "numeric")) {
-    arg_type <- match.arg(type)    
+    arg_type <- match.arg(type)
     if (arg_type == "character")
-        sprintf("'%s'", paste(x, collapse = "', '"))
+        return(sprintf("'%s'", paste(x, collapse = "', '")))
     if (arg_type == "numeric")
-        sprintf("%s", paste(x, collapse = ","))
+        return(sprintf("%s", paste(x, collapse = ",")))
 }
