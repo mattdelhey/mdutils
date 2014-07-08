@@ -1,12 +1,12 @@
 #' @title qhist
-#' @description Implementation of \code{hist} in ggplot2. Uses hist()'s default binwidth calculation.
+#' @description Implementation of \code{hist} in ggplot2. Uses hist()'s default binwidth calculation.R
 #' @export
 qhist <- function(x) {
     qplot(x, binwidth = (range(x)[2]-range(x)[1]) / nclass.Sturges(x))
 }
 
 #' @title ggcolor
-#' @description Recreate ggplot2 colors for arbitrary number of factors (stackoverflow).
+#' @description Recreate ggplot2 colors for arbitrary number of factors.
 #' See: http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette
 #' @export
 ggcolor <- function(n) {
