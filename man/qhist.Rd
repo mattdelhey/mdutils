@@ -6,6 +6,6 @@
 qhist(x)
 }
 \description{
-Implementation of \code{hist} in ggplot2. Uses hist()'s default binwidth calculation.
+Implementation of \code{hist} in ggplot2. Uses hist()'s default binwidth calculation.R
 }
 

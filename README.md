@@ -13,7 +13,7 @@ devtools::install_github("mattdelhey/mdutils")
 Functions
 -----------
 
-| catagory  | function     |  what it does |
+| catagory  | function     |  description |
 | --------  | --------     | ------------- |
 | plots     | `ggcolor `   | Recreate ggplot2 colors for arbitrary number of factors.  ([stackoverflow](http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette)) |
 | plots     | `qhist`      | Implementation of `hist` in ggplot2 (using it's default binwidth calculation). |
@@ -22,7 +22,7 @@ Functions
 | utils     | `any_na`     | For each column, see if there are any NA's. |
 | utils     | `send_email` | Wrapper for sending email using mutt. |
 | utils     | `last`       | Get last element of an object.  |
-| sql       | `read_query` | Read sql query from file. Header is useful for setting hiveconf variables. ([stackoverflow](http://stackoverflow.com/questions/3580532/r-read-contents-of-text-file-as-a-query)) |
+| sql       | `read_query` | Read sql query from file. Header is useful for setting `hiveconf` variables. ([stackoverflow](http://stackoverflow.com/questions/3580532/r-read-contents-of-text-file-as-a-query)) |
 | sql       | `collapse_vec` | Collapse R vector for use with sql. Default output is string vector. |
 
 Author

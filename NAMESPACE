@@ -2,7 +2,10 @@
 
 export(any_na)
 export(clear_all)
+export(collapse_vec)
 export(ggcolor)
+export(last)
 export(qhist)
 export(read_query)
+export(send_email)
 export(unload)

@@ -6,6 +6,6 @@
 clear_all()
 }
 \description{
-clear_all
+Remove all objects in workspace.
 }
 

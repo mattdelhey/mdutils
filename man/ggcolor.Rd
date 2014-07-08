@@ -6,6 +6,7 @@
 ggcolor(n)
 }
 \description{
-Recreate ggplot2 colors for arbitrary number of factors (stackoverflow). http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette
+Recreate ggplot2 colors for arbitrary number of factors.
+See: http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette
 }
 
