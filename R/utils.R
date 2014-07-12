@@ -1,4 +1,14 @@
-#' any_na
+#' @title samp
+#' Sample n rows from a dataframe. Works just like head/tail.
+#' @export
+samp <- function(x, n = 6L) {
+    stopifnot(length(n) == 1L)
+    n <- if (n < 0L) max(nrow(x) + n, 0L) else min(n, nrow(x))
+    n_samp <- sample(nrow(x), n)
+    x[n_samp, , drop=FALSE]
+}
+
+#' @title any_na
 #' For each col in a df, see if there are any NA's in that col.
 #' @export
 any_na <- function(df, dimn = NULL) {
