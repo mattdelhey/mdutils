@@ -8,13 +8,20 @@ samp <- function(x, n = 6L) {
     x[n_samp, , drop=FALSE]
 }
 
-#' @title any_na
+
+#' @title any.na
 #' For each col in a df, see if there are any NA's in that col.
 #' @export
-any_na <- function(df, dimn = NULL) {
+any.na <- function(df, dimn = NULL) {
     dimn <- ifelse(is.null(dimn), 2, dimn)
     apply(df, dimn, function(x) any(is.na(x)))
 }
+
+
+#' @title which.na
+#' Subset a vector to its values which are NA.
+#' @export
+which.na <- function(x) x[which(is.na(x))]
 
 
 #' @title send_email
@@ -30,7 +37,7 @@ send_email <- function(to, subject, body, attachment) {
 }
 
 
-#' @title last
+#' #' @title last
 #' @description Get last element of object.
 #' @export
 last <- function(x) head(x, n = -1)
