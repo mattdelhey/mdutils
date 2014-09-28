@@ -1,8 +1,18 @@
-#' @title qhist
-#' @description Implementation of \code{hist} in ggplot2. Uses hist()'s default binwidth calculation.R
+#' @title hist.gg
+#' @description \code{hist} plot using ggplot2. Uses the \code{hist} default binwidth calculation.
 #' @export
-qhist <- function(x) {
-    qplot(x, binwidth = (range(x)[2]-range(x)[1]) / nclass.Sturges(x))
+hist.gg <- function(x) {
+    label <- ifelse(!is.null(names(x)), names(x), "x")
+    x <- unlist(x)
+    if (!is.numeric(w)) stop("data must be numeric")
+    qplot(x, binwidth = (range(x)[2] - range(x)[1]) / nclass.Sturges(x), geom = "histogram") + xlab(label)
+}
+
+#' @title acf.gg
+#' @description \code{acf} plot using ggplot2.
+#' @export
+acf.gg <- function(x) {
+    # TODO
 }
 
 #' @title ggcolor

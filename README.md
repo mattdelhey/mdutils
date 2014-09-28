@@ -16,7 +16,8 @@ Functions
 | catagory       | function     |  description  |
 | --------       | --------     | ------------- |
 | `ggcolor `     | plots        | Recreate ggplot2 colors for arbitrary number of factors.  ([stackoverflow](http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette)) |
-| `qhist`        | plots        | Implementation of `hist` in ggplot2 (using it's default binwidth calculation). |
+| `hist.gg`      | plots        | `hist` using ggplot2 (with the `hist` default binwidth calculation). |
+| `acf.gg`       | plots        | `acf` using ggplot2. |
 | `unload`       | file i/o     | Unload a package using library syntax. ([stackoverflow](http://stackoverflow.com/questions/6979917/how-to-unload-a-package-without-restarting-r)) |
 | `clear_all`    | file i/o     | Remove all objects in workspace. |
 | `any_na`       | utils        | For each column, see if there are any NA's. |
