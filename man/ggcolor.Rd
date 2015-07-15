@@ -2,11 +2,14 @@
 % Please edit documentation in R/plots.R
 \name{ggcolor}
 \alias{ggcolor}
-\title{ggcolor}
+\title{ggcolor
+Recreate ggplot2 colors for arbitrary number of factors
+See: \url{http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette}}
 \usage{
 ggcolor(n)
 }
 \description{
+ggcolor
 Recreate ggplot2 colors for arbitrary number of factors
 See: \url{http://stackoverflow.com/questions/8197559/emulate-ggplot2-default-color-palette}
 }
