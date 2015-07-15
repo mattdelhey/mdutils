@@ -39,7 +39,7 @@ any.na <- function(df, dimn = NULL) {
 #' @export
 which.na <- function(x) x[which(is.na(x))]
 
-#' #' Wrapper for sending email using mutt.
+#' Wrapper for sending email using mutt.
 #' @family utils
 #' @export
 send.email <- function(to, subject, body, attachment) {
