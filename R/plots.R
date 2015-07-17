@@ -35,14 +35,15 @@ theme_mdelhey <- function(base_size = 12, base_family = "sans", ticks=TRUE) {
     , panel.background  = element_blank()
     , strip.background  = element_blank()
     , plot.background   = element_blank()
-    , axis.ticks.length = unit(0.5, "cm")
+    , axis.ticks.length = grid::unit(0.5, "cm")
     , axis.line         = element_line(size = 0.2, color = "#555555")
     , axis.ticks        = element_line(color = "grey90", size = 0.2)
     , panel.border      = element_blank()
     , panel.grid.major  = element_line(color = "grey90", size = 0.2)
-    , panel.grid.minor  = element_line(color = "grey90", size = 0.2) #grey90
+      ##, panel.grid.minor  = element_line(color = "grey90", size = 0.2) #grey90
+    , panel.grid.minor  = element_blank()
     , plot.title        = element_text(color = "#555555", face = "bold", size = rel(1.33), hjust = 0.01, vjust = 2)
-    , plot.margin       = unit(c(2, 0.5, 0, 0.5), "lines") ##unit(c(1, 1, 1, 1), "lines")
+    , plot.margin       = grid::unit(c(2, 0.5, 0, 0.5), "lines") ##unit(c(1, 1, 1, 1), "lines")
     , legend.position   = "bottom"
     , legend.background = element_blank()
     , legend.direction  = "horizontal"
