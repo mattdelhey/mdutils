@@ -9,3 +9,5 @@ License: MIT
 LazyData: true
 Suggests:
     testthat
+    , ggplot2
+    , grid

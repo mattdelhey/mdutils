@@ -82,3 +82,21 @@ split.data <- function(n, p) {
     names(ind) <- names(p)
     ind
 }
+
+#' Sample variance (unbiased)
+#' @param x data vector
+#' @param x2 data vector squared
+sample.var <- function(x, x2) {
+  n <- length(x)
+  1/(n*(n-1)) * (n*sum(x2) - sum(x)^2)
+}
+
+#' bootstrap a statistic for a vector
+#' @param x data vector
+#' @param t statistic
+#' @param n number of simulations
+bstrap <- function(x, t = mean, n = 10000) {
+  replicate(n, {
+    t(sample(x, length(x), replace = TRUE))
+  })
+}
