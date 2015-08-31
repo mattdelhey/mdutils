@@ -4,7 +4,7 @@
 #' @param format Output format.
 #' @family utils
 #' @export
-percent <- function(x, digits = 2, format = "f", ...) {
+format.percent <- function(x, digits = 2, format = "f", ...) {
   paste0(formatC(100 * x, format = format, digits = digits, ...), "%")
 }
 
@@ -99,4 +99,63 @@ bstrap <- function(x, t = mean, n = 10000) {
   replicate(n, {
     t(sample(x, length(x), replace = TRUE))
   })
+}
+
+#' normal model (t test) lower/upper bounds for univariate rv with unknown var
+#' @param x random variable
+#' @param alpha significance level
+#' @return vector of lower/upper bounds of realizations of rv
+#' @export
+model.normal.bounds <- function(x, alpha=0.05) {
+  n <- length(x); xbar <- mean(x); s <- sd(x)  
+  t.stat <- qt(1-alpha/2, df=n-1)
+  bound <- t.stat*(s/sqrt(n))
+  c(xbar - bound, xbar + bound)
+}
+
+#' binomial model (proportion) lower/upper bounds for univariate rv
+#' @param p observed or estimated proportion
+#' @param n number of observations
+#' @param k number of successes
+#' @param alpha signifiance level
+#' @param type method of approximation
+#' @return bounds
+#' @export
+model.binomial.bounds <- function(p=NULL, k=NULL, n=NULL, alpha=0.05, type = c("normal", "wilson")) {  
+  type <- match.arg(type)
+  z <- qnorm(1-alpha/2)
+  ## Input is data or summary statistics?
+  if (!is.null(p) && !is.null(n)) {
+    stopifnot(length(p) == 1, length(n) == 1)
+    phat <- p
+  }
+  else if (!is.null(k)) {
+    stopifnot(length(k) == 1)
+    phat <- k / n
+  }
+  ## Approximate CI
+  if (type == "normal") {
+    bound <- z*sqrt((1/n)*phat*(1-phat))
+    return(c(phat - bound, phat + bound))
+  }
+  if (type == "wilson") {
+    bound <- z*sqrt( (1/n)*phat*(1-phat) + z^2/(4*n^2) )
+    return(c(1/(1+(z^2/n)) * (phat + (1/(2*n))*z^2 - bound)
+           , 1/(1+(z^2/n)) * (phat + (1/(2*n))*z^2 + bound)))    
+  }
+}
+
+#' Chunk date range into given size. The last chunk may contain fewer elements.
+#' @param dt.range vector of dates
+#' @param dt.start first day for vector construction
+#' @param dt.end last day for vector construction
+#' @param chunk.size size of each chunk
+#' @family utils
+#' @export
+chunk.ds <- function(dt.range=NULL, dt.start=NULL, dt.end=NULL, chunk.size) {
+  if (is.null(dt.range) || (is.null(dt.start) || is.null(dt.end)))
+    stop("must supply either dt.range or dt.start and dt.end")
+  if (is.null(dt.range))
+    dt.range <- seq.Date(from=as.Date(dt.start), to=as.Date(dt.end), by=1)
+  split(dt.range, ceiling(seq_along(dt.range)/chunk.size))
 }
