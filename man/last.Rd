@@ -10,8 +10,9 @@ last(x)
 Get last element of object.
 }
 \seealso{
-Other utils: \code{\link{any.na}}; \code{\link{percent}};
-  \code{\link{samp}}; \code{\link{send.email}};
-  \code{\link{split.data}}; \code{\link{which.na}}
+Other utils: \code{\link{any.na}}; \code{\link{chunk.ds}};
+  \code{\link{format.percent}}; \code{\link{samp}};
+  \code{\link{send.email}}; \code{\link{split.data}};
+  \code{\link{which.na}}
 }
 

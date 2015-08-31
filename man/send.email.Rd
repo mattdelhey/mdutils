@@ -10,8 +10,9 @@ send.email(to, subject, body, attachment)
 Wrapper for sending email using mutt.
 }
 \seealso{
-Other utils: \code{\link{any.na}}; \code{\link{last}};
-  \code{\link{percent}}; \code{\link{samp}};
-  \code{\link{split.data}}; \code{\link{which.na}}
+Other utils: \code{\link{any.na}}; \code{\link{chunk.ds}};
+  \code{\link{format.percent}}; \code{\link{last}};
+  \code{\link{samp}}; \code{\link{split.data}};
+  \code{\link{which.na}}
 }
 

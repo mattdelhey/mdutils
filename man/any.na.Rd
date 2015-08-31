@@ -18,7 +18,8 @@ Logical vector of length = number of columns.
 For each col in a df, see if there are any NA's in that col.
 }
 \seealso{
-Other utils: \code{\link{last}}; \code{\link{percent}};
+Other utils: \code{\link{chunk.ds}};
+  \code{\link{format.percent}}; \code{\link{last}};
   \code{\link{samp}}; \code{\link{send.email}};
   \code{\link{split.data}}; \code{\link{which.na}}
 }
