@@ -42,13 +42,19 @@ which.na <- function(x) x[which(is.na(x))]
 #' Wrapper for sending email using mutt.
 #' @family utils
 #' @export
-send.email <- function(to, subject, body, attachment) {
-    if (!(is.character(to) && is.character(subject) && is.character(body) && is.character(attachment)))
-        stop("All arguments must be strings.")
-    if (system('mutt -v') != 0)
-        stop("Unable to invoke mutt.")
-    
-    system(sprintf("echo '%s' | mutt -s '%s' -a '%s' -- %s", body, subject, attachment, to))
+send.email <- function(to=NULL, subject=NULL, body=NULL, attachment=NULL) {
+  if (!is.character(to) || is.null(to))
+    stop("to argument must be defined and a character!")
+  if (!is.character(subject) && !is.null(subject))
+    stop("subject argument must be character")
+  if (!is.character(body) && !is.null(body))
+    stop("body argument must be character")
+  if (!is.character(attachment) && !is.null(attachement))
+    stop("attachment")
+
+  if (system('mutt -v') != 0)
+    stop("Unable to invoke mutt.")    
+  system(sprintf("echo '%s' | mutt -s '%s' -a '%s' -- %s", body, subject, attachment, to))
 }
 
 #' Get last element of object.
@@ -86,6 +92,7 @@ split.data <- function(n, p) {
 #' Sample variance (unbiased)
 #' @param x data vector
 #' @param x2 data vector squared
+#' @export
 sample.var <- function(x, x2) {
   n <- length(x)
   1/(n*(n-1)) * (n*sum(x2) - sum(x)^2)
@@ -95,6 +102,7 @@ sample.var <- function(x, x2) {
 #' @param x data vector
 #' @param t statistic
 #' @param n number of simulations
+#' @export
 bstrap <- function(x, t = mean, n = 10000) {
   replicate(n, {
     t(sample(x, length(x), replace = TRUE))
@@ -158,4 +166,42 @@ chunk.ds <- function(dt.range=NULL, dt.start=NULL, dt.end=NULL, chunk.size) {
   if (is.null(dt.range))
     dt.range <- seq.Date(from=as.Date(dt.start), to=as.Date(dt.end), by=1)
   split(dt.range, ceiling(seq_along(dt.range)/chunk.size))
+}
+
+Sphere.Data <- function(data) {
+   data <- as.matrix(data)
+   data <- t(t(data) - apply(data, 2, mean))
+   data.svd <- svd(var(data))
+   sphere.mat <- t(data.svd$v %*% (t(data.svd$u) * (1/sqrt(data.svd$d))))
+   return(data %*% sphere.mat)
+}
+
+#' Sphere data. This is a stronger enforcement than scaling as it forces Cov = I.
+#' @param x data matrix to be sphered
+#' @export
+sphere <- function(x) {
+  x <- as.matrix(x)
+  nm <- colnames(x)
+  x <- scale(x, center = TRUE, scale = FALSE)
+  s <- svd(var(x))
+  w <- t(s$v %*% (t(s$u) * (1/sqrt(s$d))))
+  res <- as.data.frame(x %*% w)
+  names(res) <- nm
+  res         
+}
+
+#' Rescale a matrix or data frame
+#' Standardise each column to have range [0, 1]
+#' @param x data frame or matrix
+#' @return rescaled x
+#' @export
+rescale <- function(x) {
+  apply(x, 2, function(z) (z - min(z)) / diff(range(z)))
+}
+
+#' Center a numeric vector by subtracting off its mean.
+#' @param x numeric vector
+#' @export
+center <- function(x) {
+  scale(x, center = TRUE, scale = FALSE)
 }

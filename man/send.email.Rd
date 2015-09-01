@@ -4,7 +4,7 @@
 \alias{send.email}
 \title{Wrapper for sending email using mutt.}
 \usage{
-send.email(to, subject, body, attachment)
+send.email(to = NULL, subject = NULL, body = NULL, attachment = NULL)
 }
 \description{
 Wrapper for sending email using mutt.
