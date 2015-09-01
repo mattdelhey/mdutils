@@ -51,8 +51,7 @@ send.email <- function(to=NULL, subject=NULL, body=NULL, attachment=NULL) {
     stop("body argument must be character")
   if (!is.character(attachment) && !is.null(attachment))
     stop("attachment")
-
-  if (system('mutt -v') != 0)
+  if (system('mutt -v', ignore.stdout=TRUE) != 0)
     stop("Unable to invoke mutt.")    
   system(sprintf("echo '%s' | mutt -s '%s' -a '%s' -- %s", body, subject, attachment, to))
 }
