@@ -49,7 +49,7 @@ send.email <- function(to=NULL, subject=NULL, body=NULL, attachment=NULL) {
     stop("subject argument must be character")
   if (!is.character(body) && !is.null(body))
     stop("body argument must be character")
-  if (!is.character(attachment) && !is.null(attachement))
+  if (!is.character(attachment) && !is.null(attachment))
     stop("attachment")
 
   if (system('mutt -v') != 0)
