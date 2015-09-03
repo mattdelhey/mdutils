@@ -159,20 +159,14 @@ model.binomial.bounds <- function(p=NULL, k=NULL, n=NULL, alpha=0.05, type = c("
 #' @param chunk.size size of each chunk
 #' @family utils
 #' @export
-chunk.ds <- function(dt.range=NULL, dt.start=NULL, dt.end=NULL, chunk.size) {
+chunk.ds <- function(dt.range=NULL, dt.start=NULL, dt.end=NULL, chunk.size, reverse = FALSE) {
   if (is.null(dt.range) && (is.null(dt.start) || is.null(dt.end)))
     stop("must supply either dt.range or dt.start and dt.end")
   if (is.null(dt.range))
     dt.range <- seq.Date(from=as.Date(dt.start), to=as.Date(dt.end), by=1)
+  if (reverse)
+    dt.range <- rev(dt.range)
   split(dt.range, ceiling(seq_along(dt.range)/chunk.size))
-}
-
-Sphere.Data <- function(data) {
-   data <- as.matrix(data)
-   data <- t(t(data) - apply(data, 2, mean))
-   data.svd <- svd(var(data))
-   sphere.mat <- t(data.svd$v %*% (t(data.svd$u) * (1/sqrt(data.svd$d))))
-   return(data %*% sphere.mat)
 }
 
 #' Sphere data. This is a stronger enforcement than scaling as it forces Cov = I.
@@ -204,3 +198,80 @@ rescale <- function(x) {
 center <- function(x) {
   scale(x, center = TRUE, scale = FALSE)
 }
+
+#' Cast specific columns as numeric
+#' @param x data.frame
+#' @param cols column indicies to be converted to numeric
+as.numeric.cols <- function(x, cols) {
+  for (j in numeric.cols) {
+    x[, j] <- as.numeric(x[, j])
+  }
+  x
+}
+
+#' Sort by absolute value using base::sort
+#' @param x vector be sorted
+#' @inheritParams sort
+sort.abs <- function(x, ...) {
+  old.names <- names(x)
+  names(x) <- 1:length(x)
+  ind <- names(sort(abs(x), ...))
+  res <- x[ind]
+  names(res) <- old.names
+  res
+}
+
+#' Summarize a coefficient matrix
+#' @param beta matrix of coefficient where rows represent variables and columns represent hyperparameter
+summarize.coefficient.matrix <- function(beta) {
+  beta.bar <- rowMeans(beta)
+  data.frame(
+    variable = dimnames(beta)[[1]]
+  , beta = sort.abs(beta.bar, decreasing = TRUE)
+  , sign = sign(beta.bar))
+}
+
+#' Generic dispatch for importance
+#' @param x model fit object with correct class
+importance <- function(x, ...) {
+  UseMethod("importance", x)
+}
+
+#' Variable importance for lm fit
+#' Importance determined by absolute value of t-statistic
+#' @param x lm fit
+importance.lm <- function(x, ...) {
+  coef <- coef(summary(x))
+  tval <- sort.abs(coef[, "t value"])  
+  data.frame(
+    variable = names(tval)
+  , tval = as.numeric(tval)
+  )
+}
+
+#' Variable importance for glmnet fit
+#' Importance determined by absolute value of mean coefficient
+#' @param x glmnet fit
+importance.glmnet <- function(x, ...) {
+  beta <- x$beta
+  summarize.coefficient.matrix(beta)
+}
+
+#' Variable importance for cv.glmnet fit
+#' Importance determined by absolute value of mean coefficient
+#' @param x cv.glmnet fit
+importance.cv.glmnet <- function(x, ...) {  
+  beta <- x$glmnet.fit$beta
+  summarize.coefficient.matrix(beta)
+}
+
+#' Add bias column to data matrix
+#' @param x data matrix
+add.bias <- function(x) {
+  stopifnot(is.matrix(x) || is.data.frame(x))
+  n <- nrow(x)
+  res <- cbind(cbind(rep(1, n)), x)
+  if (is.data.frame(x)) res <- as.data.frame(res)
+  res
+}
+

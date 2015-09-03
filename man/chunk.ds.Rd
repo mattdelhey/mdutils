@@ -4,7 +4,8 @@
 \alias{chunk.ds}
 \title{Chunk date range into given size. The last chunk may contain fewer elements.}
 \usage{
-chunk.ds(dt.range = NULL, dt.start = NULL, dt.end = NULL, chunk.size)
+chunk.ds(dt.range = NULL, dt.start = NULL, dt.end = NULL, chunk.size,
+  reverse = FALSE)
 }
 \arguments{
 \item{dt.range}{vector of dates}
