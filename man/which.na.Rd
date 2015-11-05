@@ -16,9 +16,12 @@ Subset of vector without missing values.
 Subset a vector to its values which are NA.
 }
 \seealso{
-Other utils: \code{\link{any.na}}; \code{\link{chunk.ds}};
-  \code{\link{format.percent}}; \code{\link{last}};
-  \code{\link{samp}}; \code{\link{send.email}};
+Other utils: \code{\link{any.na}};
+  \code{\link{as.numeric.cols}}; \code{\link{chunk.ds}};
+  \code{\link{coalesce}}; \code{\link{format.percent}};
+  \code{\link{last}}; \code{\link{relcumsum}};
+  \code{\link{relcum}}; \code{\link{samp}};
+  \code{\link{send.email}}; \code{\link{sort.abs}};
   \code{\link{split.data}}
 }
 

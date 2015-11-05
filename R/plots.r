@@ -1,3 +1,8 @@
+#' fixed_breaks
+#' @param x vector to break
+#' @param by how often to break
+fixed_breaks <- function(x, by = 7) seq(min(x), max(x), by = by)
+
 #' theme_tufte
 #' \url{https://github.com/mattdelhey/ggthemes/blob/master/R/tufte.R}
 #' @param base_size base font size

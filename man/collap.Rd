@@ -18,4 +18,10 @@ collap(x, type = c("character", "numeric", "custom"), custom = NULL, ...)
 \description{
 collapse vector for use with sql. Default output is string vector.
 }
+\seealso{
+Other sql: \code{\link{add_sql}}; \code{\link{clean_sql}};
+  \code{\link{collapse_char_vec}}; \code{\link{get_tbl}};
+  \code{\link{insert.sql}}; \code{\link{read_sql_raw}};
+  \code{\link{read_sql}}; \code{\link{var_sub}}
+}
 

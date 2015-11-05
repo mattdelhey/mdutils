@@ -14,4 +14,10 @@ insert.sql(data, table.name)
 \description{
 generate sql insert statement from dataframe
 }
+\seealso{
+Other sql: \code{\link{add_sql}}; \code{\link{clean_sql}};
+  \code{\link{collapse_char_vec}}; \code{\link{collap}};
+  \code{\link{get_tbl}}; \code{\link{read_sql_raw}};
+  \code{\link{read_sql}}; \code{\link{var_sub}}
+}
 

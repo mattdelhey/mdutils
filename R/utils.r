@@ -88,70 +88,6 @@ split.data <- function(n, p) {
     ind
 }
 
-#' Sample variance (unbiased)
-#' @param x data vector
-#' @param x2 data vector squared
-#' @export
-sample.var <- function(x, x2) {
-  n <- length(x)
-  1/(n*(n-1)) * (n*sum(x2) - sum(x)^2)
-}
-
-#' bootstrap a statistic for a vector
-#' @param x data vector
-#' @param t statistic
-#' @param n number of simulations
-#' @export
-bstrap <- function(x, t = mean, n = 10000) {
-  replicate(n, {
-    t(sample(x, length(x), replace = TRUE))
-  })
-}
-
-#' normal model (t test) lower/upper bounds for univariate rv with unknown var
-#' @param x random variable
-#' @param alpha significance level
-#' @return vector of lower/upper bounds of realizations of rv
-#' @export
-model.normal.bounds <- function(x, alpha=0.05) {
-  n <- length(x); xbar <- mean(x); s <- sd(x)  
-  t.stat <- qt(1-alpha/2, df=n-1)
-  bound <- t.stat*(s/sqrt(n))
-  c(xbar - bound, xbar + bound)
-}
-
-#' binomial model (proportion) lower/upper bounds for univariate rv
-#' @param p observed or estimated proportion
-#' @param n number of observations
-#' @param k number of successes
-#' @param alpha signifiance level
-#' @param type method of approximation
-#' @return bounds
-#' @export
-model.binomial.bounds <- function(p=NULL, k=NULL, n=NULL, alpha=0.05, type = c("normal", "wilson")) {  
-  type <- match.arg(type)
-  z <- qnorm(1-alpha/2)
-  ## Input is data or summary statistics?
-  if (!is.null(p) && !is.null(n)) {
-    stopifnot(length(p) == 1, length(n) == 1)
-    phat <- p
-  }
-  else if (!is.null(k)) {
-    stopifnot(length(k) == 1)
-    phat <- k / n
-  }
-  ## Approximate CI
-  if (type == "normal") {
-    bound <- z*sqrt((1/n)*phat*(1-phat))
-    return(c(phat - bound, phat + bound))
-  }
-  if (type == "wilson") {
-    bound <- z*sqrt( (1/n)*phat*(1-phat) + z^2/(4*n^2) )
-    return(c(1/(1+(z^2/n)) * (phat + (1/(2*n))*z^2 - bound)
-           , 1/(1+(z^2/n)) * (phat + (1/(2*n))*z^2 + bound)))    
-  }
-}
-
 #' Chunk date range into given size. The last chunk may contain fewer elements.
 #' @param dt.range vector of dates
 #' @param dt.start first day for vector construction
@@ -169,39 +105,11 @@ chunk.ds <- function(dt.range=NULL, dt.start=NULL, dt.end=NULL, chunk.size, reve
   split(dt.range, ceiling(seq_along(dt.range)/chunk.size))
 }
 
-#' Sphere data. This is a stronger enforcement than scaling as it forces Cov = I.
-#' @param x data matrix to be sphered
-#' @export
-sphere <- function(x) {
-  x <- as.matrix(x)
-  nm <- colnames(x)
-  x <- scale(x, center = TRUE, scale = FALSE)
-  s <- svd(var(x))
-  w <- t(s$v %*% (t(s$u) * (1/sqrt(s$d))))
-  res <- as.data.frame(x %*% w)
-  names(res) <- nm
-  res         
-}
-
-#' Rescale a matrix or data frame
-#' Standardise each column to have range [0, 1]
-#' @param x data frame or matrix
-#' @return rescaled x
-#' @export
-rescale <- function(x) {
-  apply(x, 2, function(z) (z - min(z)) / diff(range(z)))
-}
-
-#' Center a numeric vector by subtracting off its mean.
-#' @param x numeric vector
-#' @export
-center <- function(x) {
-  scale(x, center = TRUE, scale = FALSE)
-}
-
 #' Cast specific columns as numeric
 #' @param x data.frame
 #' @param cols column indicies to be converted to numeric
+#' @family utils
+#' @export
 as.numeric.cols <- function(x, cols) {
   for (j in numeric.cols) {
     x[, j] <- as.numeric(x[, j])
@@ -212,6 +120,8 @@ as.numeric.cols <- function(x, cols) {
 #' Sort by absolute value using base::sort
 #' @param x vector be sorted
 #' @inheritParams sort
+#' @family utils
+#' @export
 sort.abs <- function(x, ...) {
   old.names <- names(x)
   names(x) <- 1:length(x)
@@ -221,57 +131,93 @@ sort.abs <- function(x, ...) {
   res
 }
 
-#' Summarize a coefficient matrix
-#' @param beta matrix of coefficient where rows represent variables and columns represent hyperparameter
-summarize.coefficient.matrix <- function(beta) {
-  beta.bar <- rowMeans(beta)
-  data.frame(
-    variable = dimnames(beta)[[1]]
-  , beta = sort.abs(beta.bar, decreasing = TRUE)
-  , sign = sign(beta.bar))
+#' Coalesce two or more vectors
+#' Replaces missing values of first vector in order of remaining vectors
+#' @param ... vectors to coalesce
+#' @family utils
+#' @export
+coalesce <- function(...) {
+  Reduce(function(x, y) {
+    i <- which(is.na(x))
+    x[i] <- y[i]
+    x},
+  list(...))
 }
 
-#' Generic dispatch for importance
-#' @param x model fit object with correct class
-importance <- function(x, ...) {
-  UseMethod("importance", x)
+#' Relative cummulative summation
+#' @param x vector
+#' @family utils
+#' @export
+relcumsum <- function(x) {
+  y <- cumsum(x)
+  last <- tail(y, 1)
+  coalesce(y / last, 0)
 }
 
-#' Variable importance for lm fit
-#' Importance determined by absolute value of t-statistic
-#' @param x lm fit
-importance.lm <- function(x, ...) {
-  coef <- coef(summary(x))
-  tval <- sort.abs(coef[, "t value"])  
-  data.frame(
-    variable = names(tval)
-  , tval = as.numeric(tval)
-  )
+#' Relative cummulative summary
+#' @param x cumsum vector
+#' @family utils
+#' @export
+relcum <- function(x) x / tail(x,1)
+
+roundup <- function(x) plyr::round_any()
+
+#' @title clear_all
+#' @description Remove all objects in workspace.
+#' @family utils
+#' @export
+clear_all <- function() {
+    rm(list = ls())
 }
 
-#' Variable importance for glmnet fit
-#' Importance determined by absolute value of mean coefficient
-#' @param x glmnet fit
-importance.glmnet <- function(x, ...) {
-  beta <- x$beta
-  summarize.coefficient.matrix(beta)
+#' @title unload
+#' @description Unload a package using library syntax.
+#' See: http://stackoverflow.com/questions/6979917/how-to-unload-a-package-without-restarting-r
+#' @family utils
+#' @export
+unload <- function(package) {
+    name <- paste0("package:", deparse(substitute(package)))
+    detach(name = name, unload = TRUE, character.only = TRUE)
 }
 
-#' Variable importance for cv.glmnet fit
-#' Importance determined by absolute value of mean coefficient
-#' @param x cv.glmnet fit
-importance.cv.glmnet <- function(x, ...) {  
-  beta <- x$glmnet.fit$beta
-  summarize.coefficient.matrix(beta)
+#' compound revenue for a given period
+#' @family utils
+#' @export
+compound_revenue <- function(revenue, growth_rate) {
+  n <- length(revenue)
+  growth_factor <- c(growth_rate, rep(NA, n-1)) ## init growth with growth_rate
+  for (i in 2:n)
+    growth_factor[i] <- (((100+growth_factor[i-1])/100 * (100+growth_factor[1])/100)-1)*100  
+  revenue_goal <- revenue * (1+growth_factor/100)
+  data.frame(period = 1:n, growth_rate = growth_rate, growth_factor = growth_factor, revenue_goal = revenue_goal)
 }
 
-#' Add bias column to data matrix
-#' @param x data matrix
-add.bias <- function(x) {
-  stopifnot(is.matrix(x) || is.data.frame(x))
-  n <- nrow(x)
-  res <- cbind(cbind(rep(1, n)), x)
-  if (is.data.frame(x)) res <- as.data.frame(res)
-  res
+#' determine growth within month
+#' @family utils
+#' @export
+extrapolate_days <- function(revenue_goal, ndays, percent_change = 3.5) {
+  mean <- revenue_goal / ndays
+  delta <- mean * percent_change/100
+  min <- mean - delta
+  max <- mean + delta
+  factor <- (max - min) / ndays
+  revenue_goal_per_day <- c(min, rep(NA, ndays-1))
+  for (i in 2:ndays)
+    revenue_goal_per_day[i] <- revenue_goal_per_day[i-1] + factor
+  if (!all.equal(sum(revenue_goal_per_day), revenue_goal, tolerance = revenue_goal * 0.0001))
+    stop("daily revenue goal does not add up to monthly revenue goal")
+  revenue_goal_per_day
 }
 
+#' expand monthly revenue to daily revenue
+#' @family utils
+#' @export
+extrapolate_month <- function(revenue_goal, month, year = "2016", day = "1") {
+  first_date <- as.Date(paste(year, month, day, sep = "-"))
+  ndays <- days_in_month(first_date)
+  last_date <- as.Date(paste(year, month, ndays, sep = "-"))
+  revenue_goal_per_day <- revenue_goal / ndays
+  ##extrapolate_days(revenue_goal, ndays, 3.5)
+  names(revenue_goal_per_day) <- NULL
+  data.frame(date = seq(from = first_date, to = last_date, by = 1), revenue_goal = revenue_goal_per_day)
+}

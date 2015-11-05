@@ -10,9 +10,12 @@ send.email(to = NULL, subject = NULL, body = NULL, attachment = NULL)
 Wrapper for sending email using mutt.
 }
 \seealso{
-Other utils: \code{\link{any.na}}; \code{\link{chunk.ds}};
-  \code{\link{format.percent}}; \code{\link{last}};
-  \code{\link{samp}}; \code{\link{split.data}};
+Other utils: \code{\link{any.na}};
+  \code{\link{as.numeric.cols}}; \code{\link{chunk.ds}};
+  \code{\link{coalesce}}; \code{\link{format.percent}};
+  \code{\link{last}}; \code{\link{relcumsum}};
+  \code{\link{relcum}}; \code{\link{samp}};
+  \code{\link{sort.abs}}; \code{\link{split.data}};
   \code{\link{which.na}}
 }
 

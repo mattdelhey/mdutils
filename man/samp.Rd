@@ -18,9 +18,12 @@ Dataframe with n randomly selected rows.
 Sample n rows from a dataframe. Works just like head/tail.
 }
 \seealso{
-Other utils: \code{\link{any.na}}; \code{\link{chunk.ds}};
-  \code{\link{format.percent}}; \code{\link{last}};
-  \code{\link{send.email}}; \code{\link{split.data}};
+Other utils: \code{\link{any.na}};
+  \code{\link{as.numeric.cols}}; \code{\link{chunk.ds}};
+  \code{\link{coalesce}}; \code{\link{format.percent}};
+  \code{\link{last}}; \code{\link{relcumsum}};
+  \code{\link{relcum}}; \code{\link{send.email}};
+  \code{\link{sort.abs}}; \code{\link{split.data}};
   \code{\link{which.na}}
 }
 

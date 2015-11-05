@@ -2,28 +2,38 @@
 #' See: http://stackoverflow.com/questions/3580532/r-read-contents-of-text-file-as-a-query
 #' @param file query file
 #' @param header optional string to append to beginning of query, automatically adds ';'
+#' @family sql
 #' @export
-read.sql.raw <- function(file, header = NULL) {
+read_sql_raw <- function(file, header = NULL) {
   qry <- paste(readLines(file), collapse = "\n")
-  if (!is.null(header)) qry <- paste(header, qry, sep = ";")  
-  return(qry)
+  if (!is.null(header)) qry <- add_sql(header, qry)
+  qry
 }
 
-#' read sql query from file WITH variables and cleaning
-#' @inheritParams read.sql.raw
-#' @inheritParams var.sub
+#' Add additional SQL command or SET
+#' @param current_sql sql to be added to
+#' @param new_sql sql to be added from
+#' @family sql
 #' @export
-read.sql <- function(file, header = NULL, ...) {  
-  qry <- read.sql.raw(file, header)
-  qry <- var.sub(qry, ...)
-  qry <- clean.sql(qry)
+add_sql <- function(current_sql, new_sql) paste(current_sql, new_sql, sep = ";")
+
+#' read sql query from file WITH variables and cleaning
+#' @inheritParams read_sql_raw
+#' @inheritParams var_sub
+#' @family sql
+#' @export
+read_sql <- function(file, header = NULL, ...) {  
+  qry <- read_sql_raw(file, header)
+  qry <- var_sub(qry, ...)
+  qry <- clean_sql(qry)
 }
 
 #' substitute variables in string
 #' @param string input string with variable
 #' @param ... variables to replaced of the form "blah" = 5
+#' @family sql
 #' @export
-var.sub <- function(string, ...) {
+var_sub <- function(string, ...) {
   dots <- list(...)
   # Exit if no replacements
   if(length(dots) == 0) 
@@ -35,9 +45,10 @@ var.sub <- function(string, ...) {
 }
 
 #' clean query text
-#' @param qry query text loaded from read.sql
+#' @param qry query text loaded from read_sql
+#' @family sql
 #' @export
-clean.sql <- function(qry) {
+clean_sql <- function(qry) {
   tmp <- gsub("\\s{2,}|\n", " ", qry)
   tmp <- gsub("\\( ", "(", tmp)
   tmp <- gsub(" ,", ",", tmp)
@@ -49,6 +60,7 @@ clean.sql <- function(qry) {
 #' @param type output of collapsed vector
 #' @param custom optional. collapse using a custom string
 #' @param ... further arguments passed to paste
+#' @family sql
 #' @export
 collap <- function(x, type = c("character", "numeric", "custom"), custom = NULL, ...) {
   type <- match.arg(type)
@@ -59,9 +71,18 @@ collap <- function(x, type = c("character", "numeric", "custom"), custom = NULL,
          )
 }
 
+#' alias 'to easily collapse (character) vector to hive (string) list'
+#' @inheritParams collap
+#' @family sql
+#' @export
+collapse_char_vec <- function(x) {
+  collap(x, type = "character")
+}
+
 #' generate sql insert statement from dataframe
 #' @param data dataframe to import
 #' @param table.name name of table in db to insert into
+#' @family sql
 #' @export
 insert.sql <- function(data, table.name) {
   sql.data <- paste(apply(data, 1, function(x) 
@@ -70,4 +91,15 @@ insert.sql <- function(data, table.name) {
   qry <- sprintf("insert into %s values %s;", table.name, sql.data)
   return(qry)
 }
+
+#' get all rows from a table
+#' @param con dbi connection
+#' @param x table name
+#' @family sql
+#' @export
+get_tbl <- function(con, x) {
+  stopifnot("dplyr" %in% rownames(installed.packages()))
+  as.tbl(dbGetQuery(con, sprintf("select * from %s", x)))
+}
+
 
