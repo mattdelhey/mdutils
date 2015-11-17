@@ -39,6 +39,20 @@ any.na <- function(df, dimn = NULL) {
 #' @export
 which.na <- function(x) x[which(is.na(x))]
 
+#' Calculate fortnight-in-year. Similar to lubridate::week
+#' @param x date-time
+#' @family utils
+#' @export
+fortnight <- function(x) nperiod(x, ndays = 14)
+
+#' Calculate period-in-year where period can be defined by an arbitrary number of days (e.g. 14)
+#' @param x date-time object
+#' @param ndays number of days in period
+#' @family utils
+#' @export
+nperiod <- function(x, ndays = 7) (lubridate::yday(x) - 1) %/% ndays + 1
+##x <- x + days((value - week(x)) * 7)
+
 #' Wrapper for sending email using mutt.
 #' @family utils
 #' @export
@@ -221,3 +235,115 @@ extrapolate_month <- function(revenue_goal, month, year = "2016", day = "1") {
   names(revenue_goal_per_day) <- NULL
   data.frame(date = seq(from = first_date, to = last_date, by = 1), revenue_goal = revenue_goal_per_day)
 }
+
+#' create a null data frame that contains a value for each combination of factors
+#' @param x data frame
+#' @param factors vector of factor column names; filled by unique values in data frame
+#' @param measures vector of measures column names; filled by "fill"
+#' @param fill default fill value for measure columns
+#' @family utils
+#' @export
+null_frame <- function(x, factors, measures, fill = NA) {
+  ## unique combinations of all factors
+  levels <- sapply(factors, function(j) unique(x[, j]))
+  comb <- expand.grid(levels)
+  names(comb) <- factors
+  ## measure columns
+  measure_frame <- data.frame(matrix(fill, ncol = length(measures), nrow = nrow(comb)))
+  names(measure_frame) <- measures
+  ## combine
+  cbind(comb, measure_frame)
+}
+
+#' join with null data frame, coalesce measure columns
+#' @family utils
+#' @export
+null_join <- function(x, null, factors, measures) {
+  y <- suppressWarnings(left_join(null, x, by = factors))
+  ## For each column, get the two same-name vectors and coalesce
+  measures_coalesced <- sapply(measures, function(m) {
+    measure <- y[, grepl(m, names(y))]
+    ## only works for built-in numeric types, so force it
+    coalesce(as.vector(as.matrix(measure[, 2])), as.vector(as.matrix((measure[, 1]))))
+  })
+  y_measures_removed <- y[, factors] ## probably not the best way to do this, assumes y = factors + measures
+  cbind(y_measures_removed, measures_coalesced)
+}
+
+#' safe divide
+#' @family utils
+#' @export
+safe_divide <- function(x, y, fail = 0) {
+  ifelse(y == 0, fail, x/y)
+}
+
+#' safe divide operator
+#' @family utils
+#' @export
+## `%/%` <- function(x, y) {
+##   safe_divide(x, y, fail = NA)
+## }
+
+#' extend dplyr to multiple lags
+#' @param lags vector of lags to be computed
+#' @param reduce function to reduce results
+#' @inheritParams dplyr::lag
+#' @inheritParams do.call
+#' @family utils
+#' @export
+lags <- function(x, lags = 1L:2L, default = NA, order_by = NULL, ...) {
+  container <- lapply(lags, function(l) dplyr::lag(x, l, default = default, order_by, ...))
+  Reduce(function(x) sum(x, na.rm=TRUE), container)
+  ##Reduce(function(reduce, dots) reduce(x, dots))
+  ##Reduce(function(reduce, reduce_args) do.call("reduce", reduce_args), container)
+}
+
+## lags <- function(x, lags = 1L, f = sum, ...) {
+##   dots <- ...
+##   ## test case
+##   x <- filter(week, adgroup_id == 104776411, criteria == "all") %>% select(revenue)
+##   res <- lapply(1:lags, function(l) dplyr::lag(x, l, default = 0))
+##   Reduce(f, )
+##   do.call(sum, lapply(1:lags, function(l) dplyr::lag(x, l)))
+##   Reduce("sum", res)
+##   do.call(dplyr::lag, list(x, 1))
+## }
+
+#' find system hostname
+#' taken from R.utils package
+#' @family utils
+#' @export
+get_hostname <- function() {
+  host <- Sys.getenv(c("HOST", "HOSTNAME", "COMPUTERNAME"));
+  host <- host[host != ""];
+  if (length(host) == 0) {
+    # Sys.info() is not implemented on all machines, if not it returns NULL,
+    # which the below code will handle properly.
+    host <- Sys.info()["nodename"];
+    host <- host[host != ""];
+    if (length(host) == 0) {
+      host <- readLines(pipe("/usr/bin/env uname -n"));
+    }
+  }
+  host[1]
+}
+
+#' find system username
+#' taken from R.utils pacakge
+#' @family utils
+#' @export
+get_username <- function() {
+  user <- Sys.getenv(c("USER", "USERNAME"));
+  user <- user[user != ""];
+  if (length(user) == 0) {
+    # Sys.info() is not implemented on all machines, if not it returns NULL,
+    # which the below code will handle properly.
+    user <- Sys.info()["user"];
+    user <- user[user != "" & user != "unknown"];
+    if (length(user) == 0) {
+      user <- readLines(pipe("/usr/bin/env whoami"));
+    }
+  }
+  user[1]
+}
+

@@ -75,3 +75,49 @@ fit_bsm <- function(x, frequency, type = "BSM", plot = FALSE, ...) {
   ##rowSums(x.smooth)
   rowSums(x.struct$fitted)
 }
+
+
+model.exp.posterior <- function(xbar, n, alpha, beta, samples = 10000) {
+  ## posterior mean: (alpha + n) / (beta + n*xbar)
+  ## alpha = mean(historical data)
+  ## beta = sd(historical data)
+  1/rgamma(samples, alpha + n, beta + n*xbar)
+}
+
+model.exp.predictive <- function(alpha, beta, samples = 10000) {
+  ## posterior mean: beta / alpha - 1
+  ## or lambda / alpha - 1
+  alpha.prime <- alpha + 1
+  beta.prime <- beta + 1 ## estimated time interval
+  VGAM::rlomax(samples, alpha.prime, beta.prime)
+}
+
+model.exp.ci.gamma <- function(xbar, n, alpha = 0.95) {
+  lower_stat <- qgamma((1-alpha)/2, n, n)
+  upper_stat <- qgamma(1-(1-alpha)/2, n, n)
+  1/c(lower = upper_stat/xbar, lower_stat/xbar)
+}
+
+model.exp.ci.chi <- function(xbar, n, alpha = 0.95) {
+  lower <- 2*n*xbar / pchisq(p = (1-alpha)/2, df = 2*n)
+  upper <- 2*n*xbar / pchisq(p = 1 - (1-alpha)/2, df = 2*n)
+  c(lower = lower, upper = upper)
+}
+
+model.exp.ci.approx <- function(xbar, n, alpha = 0.95) {
+  lambda.hat <- 1/xbar
+  sig <- 1-(1-alpha)/2
+  score <- qnorm(sig)
+  lower <- lambda.hat * (1 - score/sqrt(n))
+  upper <- lambda.hat * (1 + score/sqrt(n))
+  c(lower = 1/upper, upper = 1/lower)
+}
+
+if (FALSE) {
+  model.exp.ci.gamma(0.5, 10)
+  model.exp.ci.approx(0.5, 10)
+  sd(model.exp.posterior(0.5, 100, 10, 5))
+  summary(model.exp.posterior(0.5, 100, 10, 5))
+  ci <- model.exp.ci(1/traffic$rpc, traffic$clicks)
+}
+

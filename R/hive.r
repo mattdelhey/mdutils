@@ -54,6 +54,18 @@ parse_header <- function(x) {
   x[2:nrow(x), ]
 }
 
+#' logic for special cases
+#' @export
+#' @family hive
+set_tempfile <- function(tmpdir = "/tmp", fileext = ".tmp") {
+  hostname <- get_hostname()
+  if (hostname == "kant.dhcp.tripadvisor.com" && tmpdir == "/tmp")
+    tmpdir_use <- "/data/tmp"
+  else
+    tmpdir_use <- tmpdir
+  tempfile(tmpdir = tmpdir_use, fileext = fileext)
+}
+
 #' retrieve hive query results as data.frame
 #' WARNING: This function will throw an error if tabs appear in field data
 #' @param qry hive query to be executed (character vector)
@@ -61,12 +73,11 @@ parse_header <- function(x) {
 #' @export
 #' @family hive
 get_hive <- function(qry = NULL, init.qry = "", isfile = FALSE, queue = "sem",
-                     fn_tmp = tempfile(tmpdir = "/tmp", fileext = ".dat")) {  
+                     fn_tmp = set_tempfile(tmpdir = "/tmp", fileext = ".dat")) {
   ## CHECK: Was a command specified?
   if (is.null(qry)) log_error("Query not valid: %s", qry)
   ## Set Hive option for header
   init.qry <- add_sql(sprintf("SET hive.cli.print.header=true; SET mapred.job.queue.name=%s;", queue), init.qry)  
-  ## Set name for temporary intermediate file  
   ## Run Hive query
   log_info("Initiating Hive query.  Storing temp results to %s", fn_tmp)
   timer_start()
@@ -127,7 +138,12 @@ hive_system <- function(hive_cmd, quit = FALSE, ...) {
   ##zero_check(system2("bash", args = c("-c", shQuote(cmd)), ...), quit = quit)
   ##zero_check(system(sprintf("sudo -E -u sem bash -c %s", cmd), ...), quit = quit)
   ##system(sprintf("sudo -E -u sem %s", cmd), ...)
-  system2("sudo", c("-u sem -s bash -c", shQuote(cmd)))
+  user <- Sys.info()["user"]
+  if (user != "sem") {
+    system2("sudo", c("-u sem -s bash -c", shQuote(cmd)))
+  } else {
+    system2("bash", c("-c", shQuote(cmd)))
+  }
 }
 
 #' set warehouse path
