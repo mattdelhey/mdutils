@@ -39,6 +39,12 @@ any.na <- function(df, dimn = NULL) {
 #' @export
 which.na <- function(x) x[which(is.na(x))]
 
+#' Replace NA values in data.frame
+#' @param x data.frame
+#' @family utils
+#' @export
+repl.na <- function(x) 1
+
 #' Calculate fortnight-in-year. Similar to lubridate::week
 #' @param x date-time
 #' @family utils
@@ -56,7 +62,7 @@ nperiod <- function(x, ndays = 7) (lubridate::yday(x) - 1) %/% ndays + 1
 #' Wrapper for sending email using mutt.
 #' @family utils
 #' @export
-send.email <- function(to=NULL, subject=NULL, body=NULL, attachment=NULL) {
+send_email <- function(to=NULL, cc=NULL, subject=NULL, body=NULL, attachment=NULL) {
   if (!is.character(to) || is.null(to))
     stop("to argument must be defined and a character!")
   if (!is.character(subject) && !is.null(subject))
@@ -66,8 +72,15 @@ send.email <- function(to=NULL, subject=NULL, body=NULL, attachment=NULL) {
   if (!is.character(attachment) && !is.null(attachment))
     stop("attachment")
   if (system('mutt -v', ignore.stdout=TRUE) != 0)
-    stop("Unable to invoke mutt.")    
-  system(sprintf("echo '%s' | mutt -s '%s' -a '%s' -- %s", body, subject, attachment, to))
+    stop("Unable to invoke mutt.")
+  if (!is.null(attachment) && !is.null(body) && !is.null(subject))
+    system(sprintf("echo '%s' | mutt -s '%s' -a '%s' -- %s", body, subject, attachment, to))
+  if (!is.null(body) && is.null(cc) && is.null(attachment))
+    system(sprintf("echo '%s' | mutt -s '%s' -- %s", body, subject, to))
+  if (!is.null(cc) && is.null(attachment)) {
+    cc_vec <- sprintf("-c %s", paste(cc, collapse = " -c "))
+    system(sprintf("echo '%s' | mutt -s '%s' %s -- %s", body, subject, cc_vec, to))
+  }
 }
 
 #' Get last element of object.
@@ -84,12 +97,10 @@ last <- function(x) head(x, n = -1)
 split.data <- function(n, p) {
     if (sum(p) != 1) stop("Split proportions must sum to one.")
     if (length(n) != 1) stop("n is the number of indicies")
-
     k <- length(p)
     s <- sapply(2:k, function(j) floor(p[j] * n))
     s <- c(n - sum(s), s)
-    stopifnot(sum(s) == n)
-    
+    stopifnot(sum(s) == n)    
     ind <- vector("list", k)
     ind[[1]] <- sample(n, size = s[1], replace = FALSE)
     for (j in 2:k) {
@@ -97,7 +108,6 @@ split.data <- function(n, p) {
         ind[[j]] <- sample(available, size = s[j], replace = FALSE)
     }
     stopifnot(all(sort(unlist(ind)) == 1:n))
-
     names(ind) <- names(p)
     ind
 }
@@ -271,6 +281,9 @@ null_join <- function(x, null, factors, measures) {
 }
 
 #' safe divide
+#' @param x numerator
+#' @param y denominator
+#' @param fail replacement for when denominator is zero
 #' @family utils
 #' @export
 safe_divide <- function(x, y, fail = 0) {
@@ -284,6 +297,15 @@ safe_divide <- function(x, y, fail = 0) {
 ##   safe_divide(x, y, fail = NA)
 ## }
 
+#' sum last l values
+#' @param l number of values back to sum
+sumlast <- function(x, l, order_by = NULL, ...) {
+  lag <- length(x) - (l-1)
+  use <- max(0, lag)
+  last <- dplyr::lag(x, use, default = NA, order_by = order_by, ...)
+  sum(last, na.rm = TRUE)
+}
+
 #' extend dplyr to multiple lags
 #' @param lags vector of lags to be computed
 #' @param reduce function to reduce results
@@ -292,8 +314,8 @@ safe_divide <- function(x, y, fail = 0) {
 #' @family utils
 #' @export
 lags <- function(x, lags = 1L:2L, default = NA, order_by = NULL, ...) {
-  container <- lapply(lags, function(l) dplyr::lag(x, l, default = default, order_by, ...))
-  Reduce(function(x) sum(x, na.rm=TRUE), container)
+  laglist <- lapply(lags, function(l) dplyr::lag(x, l, default = default, order_by, ...))
+  Reduce(function(x) sum(x, na.rm=TRUE), laglist)
   ##Reduce(function(reduce, dots) reduce(x, dots))
   ##Reduce(function(reduce, reduce_args) do.call("reduce", reduce_args), container)
 }
@@ -347,3 +369,22 @@ get_username <- function() {
   user[1]
 }
 
+#' Variable substitution
+#' Substitute named variables
+#' @examples
+#' vsub("test_%s1_%s2", "%s1" = 6, "%s2" = 10)
+vsub <- function(txt, clean=FALSE, ...) {
+  dots <- list(...)
+  # Exit if no replacements
+  if(length(dots) == 0) 
+    return(txt)
+  # Otherwise, loop through replacements
+  for(i in 1:length(dots)) 
+    txt <- gsub(names(dots)[i], dots[[i]], txt, fixed = TRUE)
+  if (clean)
+    txt <- clean_sql(txt)
+  return(txt)
+}
+
+#' proportional table
+ptable <- function(x) table(x) / sum(table(x))

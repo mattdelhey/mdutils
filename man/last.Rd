@@ -12,10 +12,19 @@ Get last element of object.
 \seealso{
 Other utils: \code{\link{any.na}};
   \code{\link{as.numeric.cols}}; \code{\link{chunk.ds}};
-  \code{\link{coalesce}}; \code{\link{format.percent}};
+  \code{\link{clear_all}}; \code{\link{coalesce}};
+  \code{\link{compound_revenue}};
+  \code{\link{extrapolate_days}};
+  \code{\link{extrapolate_month}};
+  \code{\link{format.percent}}; \code{\link{fortnight}};
+  \code{\link{get_hostname}}; \code{\link{get_username}};
+  \code{\link{lags}}; \code{\link{nperiod}};
+  \code{\link{null_frame}}; \code{\link{null_join}};
   \code{\link{relcumsum}}; \code{\link{relcum}};
-  \code{\link{samp}}; \code{\link{send.email}};
+  \code{\link{repl.na}}; \code{\link{safe_divide}};
+  \code{\link{samp}}; \code{\link{send_email}};
   \code{\link{sort.abs}}; \code{\link{split.data}};
+  \code{\link{sumlast}}; \code{\link{unload}};
   \code{\link{which.na}}
 }
 

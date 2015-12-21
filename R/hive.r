@@ -179,7 +179,27 @@ get_hive_header <- function(tbl) {
 
 #' check if R process has sudo power
 #' @export
-check_sudo <- function() {
-  
+check_sudo <- function() {  
+}
+
+#' check if adequate disk space exists
+#' @export
+check_disk <- function(path) {
+}
+
+#' get disk space
+#' https://stat.ethz.ch/pipermail/r-help/2007-October/142319.html
+#' @export
+#' @family hive
+get_disk <- function(path = Sys.getenv("HOME")) {
+   if(length(system("which df", intern = TRUE, ignore = TRUE))) {
+     cmd <- sprintf("df %s", path)
+     exec <- system(cmd, intern = TRUE, ignore = TRUE)
+     exec <- strsplit(exec[length(exec)], "[ ]+")[[1]]
+     exec <- as.numeric(exec[3:4])
+     structure(exec, names = c("used", "available"))
+   } else {
+     stop("'df' command not found")
+   }
 }
 

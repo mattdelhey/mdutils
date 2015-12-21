@@ -5,7 +5,8 @@
 \title{retrieve hive query results as data.frame
 WARNING: This function will throw an error if tabs appear in field data}
 \usage{
-get_hive(qry = NULL, init.qry = "", isfile = FALSE, queue = "sem")
+get_hive(qry = NULL, init.qry = "", isfile = FALSE, queue = "sem",
+  fn_tmp = set_tempfile(tmpdir = "/tmp", fileext = ".dat"))
 }
 \arguments{
 \item{qry}{hive query to be executed (character vector)}
@@ -17,6 +18,10 @@ retrieve hive query results as data.frame
 WARNING: This function will throw an error if tabs appear in field data
 }
 \seealso{
-Other hive: \code{\link{get_hive_tbl}}
+Other hive: \code{\link{get_disk}};
+  \code{\link{get_hive_tbl}}; \code{\link{hive_system}};
+  \code{\link{set_hive_cluster}};
+  \code{\link{set_tempfile}};
+  \code{\link{set_warehouse_path}}
 }
 

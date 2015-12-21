@@ -8,6 +8,9 @@ sample.var <- function(x, x2) {
   1/(n*(n-1)) * (n*sum(x2) - sum(x)^2)
 }
 
+sample.var.ss <- function() {  
+}
+
 #' bootstrap a statistic for a vector
 #' @param x data vector
 #' @param t statistic

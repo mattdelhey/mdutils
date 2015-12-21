@@ -92,16 +92,32 @@ model.exp.predictive <- function(alpha, beta, samples = 10000) {
   VGAM::rlomax(samples, alpha.prime, beta.prime)
 }
 
+#' alpha observations that sum to beta
+bayes.exp.mean <- function(xbar, n, alpha, beta) {
+  (beta + n*xbar) / (n+alpha)
+  ## not correct; look at wikipedia for answer
+  ##xbar * (n*beta) / (n*beta+1) + alpha*beta / (n*beta+1)
+}
+
+#' bayesian exponential estimate
+bayes.exp.hier.mean <- function(xbari, xbarij, ni, nij, alpha, beta) {
+  1 / ((alpha + ni + nij) / (beta + (ni*xbari) + (nij*xbarij)))
+}
+
 model.exp.ci.gamma <- function(xbar, n, alpha = 0.95) {
   lower_stat <- qgamma((1-alpha)/2, n, n)
   upper_stat <- qgamma(1-(1-alpha)/2, n, n)
-  1/c(lower = upper_stat/xbar, lower_stat/xbar)
+  list(
+    lower = 1/(upper_stat/xbar)
+  , upper = 1/(lower_stat/xbar)
+  , width = 1/(lower_stat/xbar)-1/(upper_stat/xbar)
+  )
 }
 
 model.exp.ci.chi <- function(xbar, n, alpha = 0.95) {
   lower <- 2*n*xbar / pchisq(p = (1-alpha)/2, df = 2*n)
   upper <- 2*n*xbar / pchisq(p = 1 - (1-alpha)/2, df = 2*n)
-  c(lower = lower, upper = upper)
+  list(lower = lower, upper = upper)
 }
 
 model.exp.ci.approx <- function(xbar, n, alpha = 0.95) {
@@ -110,14 +126,52 @@ model.exp.ci.approx <- function(xbar, n, alpha = 0.95) {
   score <- qnorm(sig)
   lower <- lambda.hat * (1 - score/sqrt(n))
   upper <- lambda.hat * (1 + score/sqrt(n))
-  c(lower = 1/upper, upper = 1/lower)
+  list(lower = 1/upper, upper = 1/lower, width = 1/lower - 1/upper)
+}
+
+#' taken from coda package
+hpd.interval <- function(obj, prob = 0.95, ...) {
+    obj <- as.matrix(obj)
+    vals <- apply(obj, 2, sort)
+    if (!is.matrix(vals)) stop("obj must have nsamp > 1")
+    nsamp <- nrow(vals)
+    npar <- ncol(vals)
+    gap <- max(1, min(nsamp - 1, round(nsamp * prob)))
+    init <- 1:(nsamp - gap)
+    inds <- apply(vals[init + gap, ,drop=FALSE] - vals[init, ,drop=FALSE],
+                  2, which.min)
+    ans <- cbind(vals[cbind(inds, 1:npar)],
+                 vals[cbind(inds + gap, 1:npar)])
+    dimnames(ans) <- list(colnames(obj), c("lower", "upper"))
+    attr(ans, "Probability") <- gap/nsamp
+    ans
 }
 
 if (FALSE) {
   model.exp.ci.gamma(0.5, 10)
   model.exp.ci.approx(0.5, 10)
-  sd(model.exp.posterior(0.5, 100, 10, 5))
-  summary(model.exp.posterior(0.5, 100, 10, 5))
+  mcmc <- model.exp.posterior(0.5, 100, 10, 5)
+  sd(mcmc)
+  summary(mcmc)
+  hpd.interval(mcmc, 0.99)
   ci <- model.exp.ci(1/traffic$rpc, traffic$clicks)
 }
+
+#' estimate E[X/Y] using taylor series approximation
+#' http://www.stat.cmu.edu/~hseltman/files/ratio.pdf
+#' @param ex E[X]
+#' @param ey E[Y]
+#' @param e2y E^2[Y]
+#' @param e3y E^3[Y]
+#' @param cxy Cov[X,Y]
+#' @param vy V[Y]
+ratio.mean.est <- function(ex, ey, e2y, e3y, cxy, vy) {
+  (ex / ey) - (cxy / e2y) + (vy*ex / e3y)
+}
+
+#' estimate Var[X/Y] using taylor series approximation
+#' http://www.stat.cmu.edu/~hseltman/files/ratio.pdf
+ratio.var.est <- function() {
+}
+
 

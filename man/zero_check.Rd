@@ -4,7 +4,7 @@
 \alias{zero_check}
 \title{zero check}
 \usage{
-zero_check(expr)
+zero_check(expr, quit = TRUE, message = NULL, fail_on_null = FALSE)
 }
 \arguments{
 \item{expr}{}

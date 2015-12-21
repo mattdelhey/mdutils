@@ -17,9 +17,9 @@ Other stats: \code{\link{add.bias}}; \code{\link{bstrap}};
   \code{\link{center}}; \code{\link{emperical.derivative}};
   \code{\link{importance.cv.glmnet}};
   \code{\link{importance.glmnet}};
-  \code{\link{importance.lm}}; \code{\link{rescale}};
-  \code{\link{sample.var}}; \code{\link{sphere}};
-  \code{\link{spline.derivative}};
+  \code{\link{importance.lm}}; \code{\link{ma}};
+  \code{\link{rescale}}; \code{\link{sample.var}};
+  \code{\link{sphere}}; \code{\link{spline.derivative}};
   \code{\link{summarize.coefficient.matrix}}
 }
 

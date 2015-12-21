@@ -166,3 +166,4 @@ try_log <- function(expr, err.msg = "") {
 log_error_dev <- function(msg, ...) {
   log_message(msg, ..., type = "FATAL ERROR")
 }
+

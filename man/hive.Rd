@@ -7,11 +7,11 @@
 hive(cmd, fileout = tempfile("Rtmp_", fileext = ".dat"), isfile = FALSE)
 }
 \arguments{
-\item{cmd}{}
+\item{cmd}{hive command}
 
-\item{fileout}{}
+\item{fileout}{temporary output file}
 
-\item{isfile}{}
+\item{isfile}{is the input a file?}
 }
 \value{
 stdout

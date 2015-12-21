@@ -7,7 +7,10 @@
 hive_void(cmd, ...)
 }
 \arguments{
-\item{cmd}{}
+\item{cmd}{hive command}
+}
+\value{
+void!
 }
 \description{
 run hive command without return

@@ -99,7 +99,18 @@ insert.sql <- function(data, table.name) {
 #' @export
 get_tbl <- function(con, x) {
   stopifnot("dplyr" %in% rownames(installed.packages()))
-  as.tbl(dbGetQuery(con, sprintf("select * from %s", x)))
+  as.tbl(dbGetQuery(con, sprintf("select x.* from %s x", x)))
+}
+
+#' save r data.frame to sql table
+#' @param con dbi connection
+#' @param tn output table name
+#' @param tbl r table
+#' @inheritParams dbWriteTable
+save_tbl <- function(con, tn, tbl, overwrite=TRUE, append=FALSE, row.names=FALSE, ...) {
+  info <- dbGetInfo(con)
+  log_message(vsub("saving to [host: %s0] [db: %s1] [tbl: %s2]", "%s0" = info$host, "%s1"=info$dbname, "%s2"=tn))
+  dbWriteTable(con, tn, as.data.frame(tbl), row.names=row.names, overwrite=overwrite, append=append, ...)
 }
 
 

@@ -4,7 +4,7 @@
 \alias{log_error}
 \title{error logging}
 \usage{
-log_error(msg, ...)
+log_error(msg, quit = TRUE, ...)
 }
 \description{
 error logging
