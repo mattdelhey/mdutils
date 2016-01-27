@@ -2,15 +2,15 @@
 % Please edit documentation in R/utils.r
 \name{repl.na}
 \alias{repl.na}
-\title{Replace NA values in data.frame}
+\title{Replace NA values in vector}
 \usage{
-repl.na(x)
+repl.na(x, ...)
 }
 \arguments{
 \item{x}{data.frame}
 }
 \description{
-Replace NA values in data.frame
+Replace NA values in vector
 }
 \seealso{
 Other utils: \code{\link{any.na}};
@@ -23,11 +23,11 @@ Other utils: \code{\link{any.na}};
   \code{\link{get_hostname}}; \code{\link{get_username}};
   \code{\link{lags}}; \code{\link{last}};
   \code{\link{nperiod}}; \code{\link{null_frame}};
-  \code{\link{null_join}}; \code{\link{relcumsum}};
-  \code{\link{relcum}}; \code{\link{safe_divide}};
-  \code{\link{samp}}; \code{\link{send_email}};
-  \code{\link{sort.abs}}; \code{\link{split.data}};
-  \code{\link{sumlast}}; \code{\link{unload}};
-  \code{\link{which.na}}
+  \code{\link{null_join}}; \code{\link{rand}};
+  \code{\link{relcumsum}}; \code{\link{relcum}};
+  \code{\link{safe_divide}}; \code{\link{samp}};
+  \code{\link{send_email}}; \code{\link{sort.abs}};
+  \code{\link{split.data}}; \code{\link{unload}};
+  \code{\link{vsub}}; \code{\link{which.na}}
 }
 

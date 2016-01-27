@@ -27,7 +27,9 @@ samp <- function(x, n = 6L) {
 #' @return Logical vector of length = number of columns.
 #' @family utils
 #' @export
-any.na <- function(df, dimn = NULL) {
+any.na <- function(x) UseMethod("any.na", x)
+any.na.numeric <- function(x) any(is.na(x))
+any.na.data.frame <- function(df, dimn = NULL) {
     dimn <- ifelse(is.null(dimn), 2, dimn)
     apply(df, dimn, function(x) any(is.na(x)))
 }
@@ -39,11 +41,18 @@ any.na <- function(df, dimn = NULL) {
 #' @export
 which.na <- function(x) x[which(is.na(x))]
 
-#' Replace NA values in data.frame
+#' Replace NA values in vector
 #' @param x data.frame
 #' @family utils
 #' @export
-repl.na <- function(x) 1
+repl.na <- function(x, ...) UseMethod("repl.na", x)
+repl.na.data.frame <- function(x, repl) {
+  apply(x, 2, repl.na, repl)
+}
+repl.na.numeric <- function(x, repl) {
+  x[which.na(x), ] <- repl
+  x
+}
 
 #' Calculate fortnight-in-year. Similar to lubridate::week
 #' @param x date-time
@@ -143,7 +152,7 @@ as.numeric.cols <- function(x, cols) {
 
 #' Sort by absolute value using base::sort
 #' @param x vector be sorted
-#' @inheritParams sort
+#' @inheritParams base::sort
 #' @family utils
 #' @export
 sort.abs <- function(x, ...) {
@@ -290,13 +299,6 @@ safe_divide <- function(x, y, fail = 0) {
   ifelse(y == 0, fail, x/y)
 }
 
-#' safe divide operator
-#' @family utils
-#' @export
-## `%/%` <- function(x, y) {
-##   safe_divide(x, y, fail = NA)
-## }
-
 #' sum last l values
 #' @param l number of values back to sum
 sumlast <- function(x, l, order_by = NULL, ...) {
@@ -310,7 +312,7 @@ sumlast <- function(x, l, order_by = NULL, ...) {
 #' @param lags vector of lags to be computed
 #' @param reduce function to reduce results
 #' @inheritParams dplyr::lag
-#' @inheritParams do.call
+#' @inheritParams base::do.call
 #' @family utils
 #' @export
 lags <- function(x, lags = 1L:2L, default = NA, order_by = NULL, ...) {
@@ -319,17 +321,6 @@ lags <- function(x, lags = 1L:2L, default = NA, order_by = NULL, ...) {
   ##Reduce(function(reduce, dots) reduce(x, dots))
   ##Reduce(function(reduce, reduce_args) do.call("reduce", reduce_args), container)
 }
-
-## lags <- function(x, lags = 1L, f = sum, ...) {
-##   dots <- ...
-##   ## test case
-##   x <- filter(week, adgroup_id == 104776411, criteria == "all") %>% select(revenue)
-##   res <- lapply(1:lags, function(l) dplyr::lag(x, l, default = 0))
-##   Reduce(f, )
-##   do.call(sum, lapply(1:lags, function(l) dplyr::lag(x, l)))
-##   Reduce("sum", res)
-##   do.call(dplyr::lag, list(x, 1))
-## }
 
 #' find system hostname
 #' taken from R.utils package
@@ -373,6 +364,8 @@ get_username <- function() {
 #' Substitute named variables
 #' @examples
 #' vsub("test_%s1_%s2", "%s1" = 6, "%s2" = 10)
+#' @family utils
+#' @export
 vsub <- function(txt, clean=FALSE, ...) {
   dots <- list(...)
   # Exit if no replacements
@@ -387,4 +380,33 @@ vsub <- function(txt, clean=FALSE, ...) {
 }
 
 #' proportional table
+#' @export
 ptable <- function(x) table(x) / sum(table(x))
+
+#' display random elements or rows
+#' @family utils
+#' @export
+rand <- function(x, ...) UseMethod("rand", x)
+rand.numeric <- function(x, n=6, ...) x[sample(1:length(x), n)]
+rand.data.frame <- function(x, n=6, ...) x[sample(1:nrow(x), n), ]
+
+#' check if packaged is installed
+package_installed <- function(x)
+  x %in% rownames(installed.packages())
+
+#' check if package is loaded
+package_loaded <- function(x)
+  x %in% names(sessionInfo()$loadedOnly)
+
+#' dplyr summary simplifier
+#' summarizes columns using a single aggregate function
+summarizeff <- function(x, f, metrics) {
+  if (!is.character(f) || !is.character(metrics))
+    stop("f and metrics must be specified as character vector")
+  if (!package_installed("dplyr"))
+    stop("dplyr not installed")
+  dots <- lapply(metrics, function(m) sprintf("%s(%s)", f, m))
+  dots <- setNames(dots, metrics)
+  summarize_(x, .dots=dots)
+}
+

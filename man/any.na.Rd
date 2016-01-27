@@ -4,7 +4,7 @@
 \alias{any.na}
 \title{For each col in a df, see if there are any NA's in that col.}
 \usage{
-\method{any}{na}(df, dimn = NULL)
+any.na(x)
 }
 \arguments{
 \item{df}{Dataframe to check.}
@@ -27,11 +27,12 @@ Other utils: \code{\link{as.numeric.cols}};
   \code{\link{get_hostname}}; \code{\link{get_username}};
   \code{\link{lags}}; \code{\link{last}};
   \code{\link{nperiod}}; \code{\link{null_frame}};
-  \code{\link{null_join}}; \code{\link{relcumsum}};
-  \code{\link{relcum}}; \code{\link{repl.na}};
-  \code{\link{safe_divide}}; \code{\link{samp}};
-  \code{\link{send_email}}; \code{\link{sort.abs}};
-  \code{\link{split.data}}; \code{\link{sumlast}};
-  \code{\link{unload}}; \code{\link{which.na}}
+  \code{\link{null_join}}; \code{\link{rand}};
+  \code{\link{relcumsum}}; \code{\link{relcum}};
+  \code{\link{repl.na}}; \code{\link{safe_divide}};
+  \code{\link{samp}}; \code{\link{send_email}};
+  \code{\link{sort.abs}}; \code{\link{split.data}};
+  \code{\link{unload}}; \code{\link{vsub}};
+  \code{\link{which.na}}
 }
 

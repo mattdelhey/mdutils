@@ -102,11 +102,22 @@ get_tbl <- function(con, x) {
   as.tbl(dbGetQuery(con, sprintf("select x.* from %s x", x)))
 }
 
+#' get query
+#' @param con dbi connection
+#' @param qry query text
+#' @family sql
+#' @export
+get_qry <- function(con, qry) {
+  stopifnot("dplyr" %in% rownames(installed.packages()))
+  as.tbl(dbGetQuery(con, qry))
+}
+
+
 #' save r data.frame to sql table
 #' @param con dbi connection
 #' @param tn output table name
 #' @param tbl r table
-#' @inheritParams dbWriteTable
+#' @inheritParams RPostgreSQL::dbWriteTable
 save_tbl <- function(con, tn, tbl, overwrite=TRUE, append=FALSE, row.names=FALSE, ...) {
   info <- dbGetInfo(con)
   log_message(vsub("saving to [host: %s0] [db: %s1] [tbl: %s2]", "%s0" = info$host, "%s1"=info$dbname, "%s2"=tn))

@@ -61,10 +61,10 @@ model.binomial.bounds <- function(p=NULL, k=NULL, n=NULL, alpha=0.05, type = c("
 }
 
 #' fit basic structural model
-#' @inheritParams StructTS
 #' @param x univariate time-series
 #' @param frequency frequency of time-series (12 = month, 52 = weekly)
 #' @param plot plot components
+#' @inheritParams stats::StructTS
 #' @family models
 #' @export
 fit_bsm <- function(x, frequency, type = "BSM", plot = FALSE, ...) {

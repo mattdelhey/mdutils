@@ -11,6 +11,10 @@ fit_bsm(x, frequency, type = "BSM", plot = FALSE, ...)
 
 \item{frequency}{frequency of time-series (12 = month, 52 = weekly)}
 
+\item{type}{the class of structural model.  If omitted, a BSM is used
+    for a time series with \code{frequency(x) > 1}, and a local trend
+    model otherwise.  Can be abbreviated.}
+
 \item{plot}{plot components}
 }
 \description{

@@ -23,11 +23,11 @@ Other utils: \code{\link{any.na}};
   \code{\link{get_hostname}}; \code{\link{get_username}};
   \code{\link{lags}}; \code{\link{last}};
   \code{\link{nperiod}}; \code{\link{null_frame}};
-  \code{\link{null_join}}; \code{\link{relcumsum}};
-  \code{\link{repl.na}}; \code{\link{safe_divide}};
-  \code{\link{samp}}; \code{\link{send_email}};
-  \code{\link{sort.abs}}; \code{\link{split.data}};
-  \code{\link{sumlast}}; \code{\link{unload}};
-  \code{\link{which.na}}
+  \code{\link{null_join}}; \code{\link{rand}};
+  \code{\link{relcumsum}}; \code{\link{repl.na}};
+  \code{\link{safe_divide}}; \code{\link{samp}};
+  \code{\link{send_email}}; \code{\link{sort.abs}};
+  \code{\link{split.data}}; \code{\link{unload}};
+  \code{\link{vsub}}; \code{\link{which.na}}
 }
 
