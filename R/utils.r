@@ -41,6 +41,13 @@ any.na.data.frame <- function(df, dimn = NULL) {
 #' @export
 which.na <- function(x) x[which(is.na(x))]
 
+#' Subset a vector to its values which are INF
+#' @param x Vector with missing values
+#' @return Subset of vector without missing values
+#' @family utils
+#' @export
+which.inf <- function(x) x[which(is.infinite(x))]
+
 #' Replace NA values in vector
 #' @param x data.frame
 #' @family utils
@@ -49,8 +56,29 @@ repl.na <- function(x, ...) UseMethod("repl.na", x)
 repl.na.data.frame <- function(x, repl) {
   apply(x, 2, repl.na, repl)
 }
-repl.na.numeric <- function(x, repl) {
+repl.na.matrix <- function(x, repl) {
   x[which.na(x), ] <- repl
+  x
+}
+repl.na.numeric <- function(x, repl) {
+  x[which.na(x)] <- repl
+  x
+}
+repl.na.character <- function(x, repl) {
+  x[which.na(x)] <- repl
+  x
+}
+
+
+#' Replace Inf values in vector
+#' @param x data.frame
+#' @family utils
+#' @export
+repl.inf.data.frame <- function(x, repl) {
+  apply(x, 2, repl.inf, repl)
+}
+repl.inf.data.frame <- function(x, repl) {
+  x[which.inf(x), ] <- repl
   x
 }
 
