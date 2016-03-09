@@ -97,9 +97,23 @@ insert.sql <- function(data, table.name) {
 #' @param x table name
 #' @family sql
 #' @export
-get_tbl <- function(con, x) {
+get_tbl <- function(con=NULL, x, hive=FALSE) {
   stopifnot("dplyr" %in% rownames(installed.packages()))
-  as.tbl(dbGetQuery(con, sprintf("select x.* from %s x", x)))
+  if (!hive) {
+    if (is.null(con)) stop("con cannot be null")
+    return(as.tbl(dbGetQuery(con, sprintf("select x.* from %s x", x))))
+  }
+  if (hive)
+    return(as.tbl(get_hive(sprintf("select * from %s", x))))
+}
+
+#' get all rows from a table
+#' @inheritParams get_tbl
+#' @family sql
+#' @export
+get_htbl <- function(x) {
+  stopifnot("dplyr" %in% rownames(installed.packages()))
+  as.tbl(get_hive(sprintf("select * from %s", x)))
 }
 
 #' get query
@@ -107,7 +121,7 @@ get_tbl <- function(con, x) {
 #' @param qry query text
 #' @family sql
 #' @export
-get_qry <- function(con, qry) {
+get_qry <- function(con, qry, ...) {
   stopifnot("dplyr" %in% rownames(installed.packages()))
   as.tbl(dbGetQuery(con, qry))
 }

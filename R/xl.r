@@ -43,11 +43,11 @@ xl_weights <- function(wb, w, sheet) {
 }
 
 #' write xl sheet
-xl_sheet <- function(wb, data, sheet, outcol) {
+xl_sheet <- function(wb, data, sheet, outcol, where="$A$1") {
   ## Create new sheet in wb
   createSheet(wb, name=sheet)
-  ## Write data
-  xl_write(wb, data=data, sheet=sheet, region=sprintf("%s_tclist", sheet),  where="$E$1")
+  ## Write data (where="$E$1")
+  xl_write(wb, data=data, sheet=sheet, region=sprintf("%s_tclist", sheet),  where=where)
   ## Write formulas
   exrows <- 2:(nrow(data)+1)
   xl_manual2(exrows, sheet=sheet, outcol=outcol)
@@ -55,8 +55,8 @@ xl_sheet <- function(wb, data, sheet, outcol) {
   setForceFormulaRecalculation(wb, sheet=sheet, value=TRUE)
   ## default to world
   setActiveSheet(wb, sheet="World")
-  ## set autofilter
-  setAutoFilter(wb, sheet=sheet, reference = aref("E1", dim(data)))
+  ## set autofilter (reference = aref("E1", dim(data)))
+  setAutoFilter(wb, sheet=sheet, reference = aref("A1", dim(data)))
 }
 
 

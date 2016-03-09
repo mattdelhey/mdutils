@@ -438,3 +438,6 @@ summarizeff <- function(x, f, metrics) {
   summarize_(x, .dots=dots)
 }
 
+as.vec <- function(x) {
+  as.vector(as.matrix(x))
+}
