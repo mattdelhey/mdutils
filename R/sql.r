@@ -139,3 +139,15 @@ save_tbl <- function(con, tn, tbl, overwrite=TRUE, append=FALSE, row.names=FALSE
 }
 
 
+#' transfer from swt to tamp
+#' @param con output database connection
+#' @param tn_in input table name
+#' @param tn_out output table name
+#' @param swtparam location of sem warehouse param file
+transfer <- function(con, tn_in, tn_out, swtparams="../swtparams.r") {
+  library(RJDBC)
+  source(swtparams)
+  tbl <- get_tbl(swt.con, tn_in)
+  invisible(save_tbl(con, tn_out, tbl))
+}
+
