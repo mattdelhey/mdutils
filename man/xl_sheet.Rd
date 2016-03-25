@@ -4,7 +4,7 @@
 \alias{xl_sheet}
 \title{write xl sheet}
 \usage{
-xl_sheet(wb, data, sheet, outcol)
+xl_sheet(wb, data, sheet, outcol, where = "$A$1")
 }
 \description{
 write xl sheet

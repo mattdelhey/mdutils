@@ -28,10 +28,11 @@ Other utils: \code{\link{any.na}};
   \code{\link{nperiod}}; \code{\link{null_frame}};
   \code{\link{null_join}}; \code{\link{rand}};
   \code{\link{relcumsum}}; \code{\link{relcum}};
-  \code{\link{repl.na}}; \code{\link{safe_divide}};
-  \code{\link{samp}}; \code{\link{send_email}};
-  \code{\link{sort.abs}}; \code{\link{split.data}};
-  \code{\link{unload}}; \code{\link{vsub}};
+  \code{\link{repl.inf.data.frame}}; \code{\link{repl.na}};
+  \code{\link{safe_divide}}; \code{\link{samp}};
+  \code{\link{send_email}}; \code{\link{sort.abs}};
+  \code{\link{split.data}}; \code{\link{unload}};
+  \code{\link{vsub}}; \code{\link{which.inf}};
   \code{\link{which.na}}
 }
 

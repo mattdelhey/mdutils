@@ -4,7 +4,7 @@
 \alias{get_qry}
 \title{get query}
 \usage{
-get_qry(con, qry)
+get_qry(con, qry, ...)
 }
 \arguments{
 \item{con}{dbi connection}
@@ -17,8 +17,8 @@ get query
 \seealso{
 Other sql: \code{\link{add_sql}}; \code{\link{clean_sql}};
   \code{\link{collapse_char_vec}}; \code{\link{collap}};
-  \code{\link{get_tbl}}; \code{\link{insert.sql}};
-  \code{\link{read_sql_raw}}; \code{\link{read_sql}};
-  \code{\link{var_sub}}
+  \code{\link{get_htbl}}; \code{\link{get_tbl}};
+  \code{\link{insert.sql}}; \code{\link{read_sql_raw}};
+  \code{\link{read_sql}}; \code{\link{var_sub}}
 }
 
