@@ -132,6 +132,7 @@ get_qry <- function(con, qry, ...) {
 #' @param tn output table name
 #' @param tbl r table
 #' @inheritParams RPostgreSQL::dbWriteTable
+#' @export
 save_tbl <- function(con, tn, tbl, overwrite=TRUE, append=FALSE, row.names=FALSE, ...) {
   info <- dbGetInfo(con)
   log_message(vsub("saving to [host: %s0] [db: %s1] [tbl: %s2]", "%s0" = info$host, "%s1"=info$dbname, "%s2"=tn))
@@ -144,6 +145,7 @@ save_tbl <- function(con, tn, tbl, overwrite=TRUE, append=FALSE, row.names=FALSE
 #' @param tn_in input table name
 #' @param tn_out output table name
 #' @param swtparam location of sem warehouse param file
+#' @export
 transfer <- function(con, tn_in, tn_out, swtparams="../swtparams.r") {
   library(RJDBC)
   source(swtparams)

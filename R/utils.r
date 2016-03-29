@@ -419,15 +419,18 @@ rand.numeric <- function(x, n=6, ...) x[sample(1:length(x), n)]
 rand.data.frame <- function(x, n=6, ...) x[sample(1:nrow(x), n), ]
 
 #' check if packaged is installed
+#' @export
 package_installed <- function(x)
   x %in% rownames(installed.packages())
 
 #' check if package is loaded
+#' @export
 package_loaded <- function(x)
   x %in% names(sessionInfo()$loadedOnly)
 
 #' dplyr summary simplifier
 #' summarizes columns using a single aggregate function
+#' @export
 summarizeff <- function(x, f, metrics) {
   if (!is.character(f) || !is.character(metrics))
     stop("f and metrics must be specified as character vector")
@@ -438,6 +441,17 @@ summarizeff <- function(x, f, metrics) {
   summarize_(x, .dots=dots)
 }
 
+#' as vector
+#' @export
 as.vec <- function(x) {
   as.vector(as.matrix(x))
 }
+
+#' write table
+#' @inheritParams write.table
+#' @export
+write_tbl <- function(tbl, fn, sep=",", row.names=FALSE, ...) {
+  log_message(vsub("saving to [fn: $fn] [sep: $sep]", "$fn"=fn, "$sep"=sep))
+  write.table(tbl, fn, sep=sep, row.names=row.names, ...)
+}
+
