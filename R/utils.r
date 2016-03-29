@@ -448,7 +448,7 @@ as.vec <- function(x) {
 }
 
 #' write table
-#' @inheritParams write.table
+#' @inheritParams utils::write.table
 #' @export
 write_tbl <- function(tbl, fn, sep=",", row.names=FALSE, ...) {
   log_message(vsub("saving to [fn: $fn] [sep: $sep]", "$fn"=fn, "$sep"=sep))
