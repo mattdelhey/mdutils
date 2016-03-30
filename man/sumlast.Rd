@@ -7,7 +7,11 @@
 sumlast(x, l, order_by = NULL, ...)
 }
 \arguments{
-\item{l}{number of values back to sum}
+\item{x}{data.frame}
+
+\item{l}{integer number of values back to sum}
+
+\item{order_by}{character}
 }
 \description{
 sum last l values

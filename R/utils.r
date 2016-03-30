@@ -2,7 +2,6 @@
 #' @param x Proportion to convert.
 #' @param digits Number of digits to print.
 #' @param format Output format.
-#' @family utils
 #' @export
 format.percent <- function(x, digits = 2, format = "f", ...) {
   paste0(formatC(100 * x, format = format, digits = digits, ...), "%")
@@ -12,7 +11,6 @@ format.percent <- function(x, digits = 2, format = "f", ...) {
 #' @param x Dataframe to sample.
 #' @param n Number of rows to sample.
 #' @return Dataframe with n randomly selected rows.
-#' @family utils
 #' @export
 samp <- function(x, n = 6L) {
     stopifnot(length(n) == 1L)
@@ -25,7 +23,6 @@ samp <- function(x, n = 6L) {
 #' @param df Dataframe to check.
 #' @param dimn Dimension to apply on. See ?apply.
 #' @return Logical vector of length = number of columns.
-#' @family utils
 #' @export
 any.na <- function(x) UseMethod("any.na", x)
 any.na.numeric <- function(x) any(is.na(x))
@@ -37,20 +34,17 @@ any.na.data.frame <- function(df, dimn = NULL) {
 #' Subset a vector to its values which are NA.
 #' @param x Vector with missing values.
 #' @return Subset of vector without missing values.
-#' @family utils
 #' @export
 which.na <- function(x) x[which(is.na(x))]
 
 #' Subset a vector to its values which are INF
 #' @param x Vector with missing values
 #' @return Subset of vector without missing values
-#' @family utils
 #' @export
 which.inf <- function(x) x[which(is.infinite(x))]
 
 #' Replace NA values in vector
 #' @param x data.frame
-#' @family utils
 #' @export
 repl.na <- function(x, ...) UseMethod("repl.na", x)
 repl.na.data.frame <- function(x, repl) {
@@ -69,10 +63,8 @@ repl.na.character <- function(x, repl) {
   x
 }
 
-
 #' Replace Inf values in vector
 #' @param x data.frame
-#' @family utils
 #' @export
 repl.inf.data.frame <- function(x, repl) {
   apply(x, 2, repl.inf, repl)
@@ -84,20 +76,21 @@ repl.inf.data.frame <- function(x, repl) {
 
 #' Calculate fortnight-in-year. Similar to lubridate::week
 #' @param x date-time
-#' @family utils
 #' @export
 fortnight <- function(x) nperiod(x, ndays = 14)
 
 #' Calculate period-in-year where period can be defined by an arbitrary number of days (e.g. 14)
 #' @param x date-time object
 #' @param ndays number of days in period
-#' @family utils
 #' @export
 nperiod <- function(x, ndays = 7) (lubridate::yday(x) - 1) %/% ndays + 1
-##x <- x + days((value - week(x)) * 7)
 
 #' Wrapper for sending email using mutt.
-#' @family utils
+#' @param to
+#' @param cc
+#' @param subject
+#' @param body
+#' @param attachment
 #' @export
 send_email <- function(to=NULL, cc=NULL, subject=NULL, body=NULL, attachment=NULL) {
   if (!is.character(to) || is.null(to))
@@ -121,7 +114,6 @@ send_email <- function(to=NULL, cc=NULL, subject=NULL, body=NULL, attachment=NUL
 }
 
 #' Get last element of object.
-#' @family utils
 #' @export
 last <- function(x) head(x, n = -1)
 
@@ -129,7 +121,6 @@ last <- function(x) head(x, n = -1)
 #' @param n number of indicies
 #' @param p vector that sums to one
 #' @return List of split indicies
-#' @family utils
 #' @export
 split.data <- function(n, p) {
     if (sum(p) != 1) stop("Split proportions must sum to one.")
@@ -154,7 +145,6 @@ split.data <- function(n, p) {
 #' @param dt.start first day for vector construction
 #' @param dt.end last day for vector construction
 #' @param chunk.size size of each chunk
-#' @family utils
 #' @export
 chunk.ds <- function(dt.range=NULL, dt.start=NULL, dt.end=NULL, chunk.size, reverse = FALSE) {
   if (is.null(dt.range) && (is.null(dt.start) || is.null(dt.end)))
@@ -169,7 +159,6 @@ chunk.ds <- function(dt.range=NULL, dt.start=NULL, dt.end=NULL, chunk.size, reve
 #' Cast specific columns as numeric
 #' @param x data.frame
 #' @param cols column indicies to be converted to numeric
-#' @family utils
 #' @export
 as.numeric.cols <- function(x, cols) {
   for (j in numeric.cols) {
@@ -181,7 +170,6 @@ as.numeric.cols <- function(x, cols) {
 #' Sort by absolute value using base::sort
 #' @param x vector be sorted
 #' @inheritParams base::sort
-#' @family utils
 #' @export
 sort.abs <- function(x, ...) {
   old.names <- names(x)
@@ -195,7 +183,6 @@ sort.abs <- function(x, ...) {
 #' Coalesce two or more vectors
 #' Replaces missing values of first vector in order of remaining vectors
 #' @param ... vectors to coalesce
-#' @family utils
 #' @export
 coalesce <- function(...) {
   Reduce(function(x, y) {
@@ -207,7 +194,6 @@ coalesce <- function(...) {
 
 #' Relative cummulative summation
 #' @param x vector
-#' @family utils
 #' @export
 relcumsum <- function(x) {
   y <- cumsum(x)
@@ -217,7 +203,6 @@ relcumsum <- function(x) {
 
 #' Relative cummulative summary
 #' @param x cumsum vector
-#' @family utils
 #' @export
 relcum <- function(x) x / tail(x,1)
 
@@ -225,7 +210,6 @@ roundup <- function(x) plyr::round_any()
 
 #' @title clear_all
 #' @description Remove all objects in workspace.
-#' @family utils
 #' @export
 clear_all <- function() {
     rm(list = ls())
@@ -234,7 +218,6 @@ clear_all <- function() {
 #' @title unload
 #' @description Unload a package using library syntax.
 #' See: http://stackoverflow.com/questions/6979917/how-to-unload-a-package-without-restarting-r
-#' @family utils
 #' @export
 unload <- function(package) {
     name <- paste0("package:", deparse(substitute(package)))
@@ -242,7 +225,6 @@ unload <- function(package) {
 }
 
 #' compound revenue for a given period
-#' @family utils
 #' @export
 compound_revenue <- function(revenue, growth_rate) {
   n <- length(revenue)
@@ -254,7 +236,6 @@ compound_revenue <- function(revenue, growth_rate) {
 }
 
 #' determine growth within month
-#' @family utils
 #' @export
 extrapolate_days <- function(revenue_goal, ndays, percent_change = 3.5) {
   mean <- revenue_goal / ndays
@@ -271,7 +252,6 @@ extrapolate_days <- function(revenue_goal, ndays, percent_change = 3.5) {
 }
 
 #' expand monthly revenue to daily revenue
-#' @family utils
 #' @export
 extrapolate_month <- function(revenue_goal, month, year = "2016", day = "1") {
   first_date <- as.Date(paste(year, month, day, sep = "-"))
@@ -288,7 +268,6 @@ extrapolate_month <- function(revenue_goal, month, year = "2016", day = "1") {
 #' @param factors vector of factor column names; filled by unique values in data frame
 #' @param measures vector of measures column names; filled by "fill"
 #' @param fill default fill value for measure columns
-#' @family utils
 #' @export
 null_frame <- function(x, factors, measures, fill = NA) {
   ## unique combinations of all factors
@@ -303,7 +282,6 @@ null_frame <- function(x, factors, measures, fill = NA) {
 }
 
 #' join with null data frame, coalesce measure columns
-#' @family utils
 #' @export
 null_join <- function(x, null, factors, measures) {
   y <- suppressWarnings(left_join(null, x, by = factors))
@@ -321,14 +299,16 @@ null_join <- function(x, null, factors, measures) {
 #' @param x numerator
 #' @param y denominator
 #' @param fail replacement for when denominator is zero
-#' @family utils
 #' @export
 safe_divide <- function(x, y, fail = 0) {
   ifelse(y == 0, fail, x/y)
 }
 
 #' sum last l values
-#' @param l number of values back to sum
+#' @param x data.frame
+#' @param l integer number of values back to sum
+#' @param order_by character
+#' @export
 sumlast <- function(x, l, order_by = NULL, ...) {
   lag <- length(x) - (l-1)
   use <- max(0, lag)
@@ -341,7 +321,6 @@ sumlast <- function(x, l, order_by = NULL, ...) {
 #' @param reduce function to reduce results
 #' @inheritParams dplyr::lag
 #' @inheritParams base::do.call
-#' @family utils
 #' @export
 lags <- function(x, lags = 1L:2L, default = NA, order_by = NULL, ...) {
   laglist <- lapply(lags, function(l) dplyr::lag(x, l, default = default, order_by, ...))
@@ -352,7 +331,6 @@ lags <- function(x, lags = 1L:2L, default = NA, order_by = NULL, ...) {
 
 #' find system hostname
 #' taken from R.utils package
-#' @family utils
 #' @export
 get_hostname <- function() {
   host <- Sys.getenv(c("HOST", "HOSTNAME", "COMPUTERNAME"));
@@ -371,7 +349,6 @@ get_hostname <- function() {
 
 #' find system username
 #' taken from R.utils pacakge
-#' @family utils
 #' @export
 get_username <- function() {
   user <- Sys.getenv(c("USER", "USERNAME"));
@@ -392,7 +369,6 @@ get_username <- function() {
 #' Substitute named variables
 #' @examples
 #' vsub("test_%s1_%s2", "%s1" = 6, "%s2" = 10)
-#' @family utils
 #' @export
 vsub <- function(txt, clean=FALSE, ...) {
   dots <- list(...)
@@ -412,7 +388,6 @@ vsub <- function(txt, clean=FALSE, ...) {
 ptable <- function(x) table(x) / sum(table(x))
 
 #' display random elements or rows
-#' @family utils
 #' @export
 rand <- function(x, ...) UseMethod("rand", x)
 rand.numeric <- function(x, n=6, ...) x[sample(1:length(x), n)]

@@ -11,23 +11,4 @@ get_hostname()
 find system hostname
 taken from R.utils package
 }
-\seealso{
-Other utils: \code{\link{any.na}};
-  \code{\link{as.numeric.cols}}; \code{\link{chunk.ds}};
-  \code{\link{clear_all}}; \code{\link{coalesce}};
-  \code{\link{compound_revenue}};
-  \code{\link{extrapolate_days}};
-  \code{\link{extrapolate_month}};
-  \code{\link{format.percent}}; \code{\link{fortnight}};
-  \code{\link{get_username}}; \code{\link{lags}};
-  \code{\link{last}}; \code{\link{nperiod}};
-  \code{\link{null_frame}}; \code{\link{null_join}};
-  \code{\link{rand}}; \code{\link{relcumsum}};
-  \code{\link{relcum}}; \code{\link{repl.inf.data.frame}};
-  \code{\link{repl.na}}; \code{\link{safe_divide}};
-  \code{\link{samp}}; \code{\link{send_email}};
-  \code{\link{sort.abs}}; \code{\link{split.data}};
-  \code{\link{unload}}; \code{\link{vsub}};
-  \code{\link{which.inf}}; \code{\link{which.na}}
-}
 
