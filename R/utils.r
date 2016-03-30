@@ -523,7 +523,7 @@ read_ini <- function(filename, token='=', commenttoken=';', aslist=FALSE, case) 
 
   stopifnot(file.exists(filename))
 	
-	Lines <- trim(readLines(filename,  warn = FALSE))
+	Lines <- gdata::trim(readLines(filename,  warn = FALSE))
 	
 	ini <- lapply(Lines, function(s){ .strSplitOnFirstToken(s, token=commenttoken) } ) 
 	Lines <- matrix(unlist(ini), ncol=2, byrow=TRUE)[,1]
