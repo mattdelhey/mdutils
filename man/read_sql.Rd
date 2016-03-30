@@ -16,11 +16,4 @@ read_sql(file, header = NULL, ...)
 \description{
 read sql query from file WITH variables and cleaning
 }
-\seealso{
-Other sql: \code{\link{add_sql}}; \code{\link{clean_sql}};
-  \code{\link{collapse_char_vec}}; \code{\link{collap}};
-  \code{\link{get_htbl}}; \code{\link{get_qry}};
-  \code{\link{get_tbl}}; \code{\link{insert.sql}};
-  \code{\link{read_sql_raw}}; \code{\link{var_sub}}
-}
 

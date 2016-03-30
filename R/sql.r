@@ -2,7 +2,6 @@
 #' See: http://stackoverflow.com/questions/3580532/r-read-contents-of-text-file-as-a-query
 #' @param file query file
 #' @param header optional string to append to beginning of query, automatically adds ';'
-#' @family sql
 #' @export
 read_sql_raw <- function(file, header = NULL) {
   qry <- paste(readLines(file), collapse = "\n")
@@ -13,17 +12,16 @@ read_sql_raw <- function(file, header = NULL) {
 #' Add additional SQL command or SET
 #' @param current_sql sql to be added to
 #' @param new_sql sql to be added from
-#' @family sql
 #' @export
 add_sql <- function(current_sql, new_sql) paste(current_sql, new_sql, sep = ";")
 
 #' read sql query from file WITH variables and cleaning
 #' @inheritParams read_sql_raw
 #' @inheritParams var_sub
-#' @family sql
 #' @export
-read_sql <- function(file, header = NULL, ...) {  
+read_sql <- function(file, header=NULL, ...) {  
   qry <- read_sql_raw(file, header)
+  qry <- remove_comments(qry)
   qry <- var_sub(qry, ...)
   qry <- clean_sql(qry)
 }
@@ -31,7 +29,6 @@ read_sql <- function(file, header = NULL, ...) {
 #' substitute variables in string
 #' @param string input string with variable
 #' @param ... variables to replaced of the form "blah" = 5
-#' @family sql
 #' @export
 var_sub <- function(string, ...) {
   dots <- list(...)
@@ -44,9 +41,19 @@ var_sub <- function(string, ...) {
   return(string)
 }
 
+#' remove query comments
+#' @param qry
+#' @export
+remove_comments <- function(qry) {
+  tmp1 <- str_split(qry, "\n")
+  tmp2 <- lapply(tmp1, str_split, "-{2,}", 2)
+  tmp3 <- lapply(tmp2[[1]], "[", 1)
+  tmp4 <- paste(tmp3, collapse=" ")
+  return(tmp4)
+}
+
 #' clean query text
 #' @param qry query text loaded from read_sql
-#' @family sql
 #' @export
 clean_sql <- function(qry) {
   tmp <- gsub("\\s{2,}|\n", " ", qry)

@@ -467,6 +467,7 @@ audience_map <- function(sem_manager="/data/sem-manager", tamgco=c("ta", "vi", "
     tbl
   }))
   clean <- raw[, c("display_name", "external_id", "aggregation_id")]
+  clean <- rbind(clean, c("all", "all", "all"), c("null", "null", "null"))
   clean
 }
 
