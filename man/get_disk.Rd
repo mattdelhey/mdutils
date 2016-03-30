@@ -2,18 +2,22 @@
 % Please edit documentation in R/hive.r
 \name{get_disk}
 \alias{get_disk}
-\title{get disk space
+\title{get disk space on unix
 https://stat.ethz.ch/pipermail/r-help/2007-October/142319.html}
 \usage{
 get_disk(path = Sys.getenv("HOME"))
 }
+\arguments{
+\item{path}{directory}
+}
 \description{
-get disk space
+get disk space on unix
 https://stat.ethz.ch/pipermail/r-help/2007-October/142319.html
 }
 \seealso{
 Other hive: \code{\link{get_hive_tbl}};
   \code{\link{get_hive}}; \code{\link{hive_system}};
+  \code{\link{hive_void_file}}; \code{\link{parse_header}};
   \code{\link{set_hive_cluster}};
   \code{\link{set_tempfile}};
   \code{\link{set_warehouse_path}}

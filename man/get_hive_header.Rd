@@ -6,6 +6,9 @@
 \usage{
 get_hive_header(tbl)
 }
+\arguments{
+\item{tbl}{data.frame}
+}
 \description{
 get column names of a hive table for tar.hive
 }

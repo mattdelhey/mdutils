@@ -6,13 +6,19 @@
 \usage{
 set_tempfile(tmpdir = "/tmp", fileext = ".tmp")
 }
+\arguments{
+\item{tmpdir}{a non-empty character vector giving the directory name}
+
+\item{fileext}{a non-empty character vector giving the file extension}
+}
 \description{
 logic for special cases
 }
 \seealso{
 Other hive: \code{\link{get_disk}};
   \code{\link{get_hive_tbl}}; \code{\link{get_hive}};
-  \code{\link{hive_system}};
+  \code{\link{hive_system}}; \code{\link{hive_void_file}};
+  \code{\link{parse_header}};
   \code{\link{set_hive_cluster}};
   \code{\link{set_warehouse_path}}
 }

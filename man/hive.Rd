@@ -4,7 +4,8 @@
 \alias{hive}
 \title{run hive command}
 \usage{
-hive(cmd, fileout = tempfile("Rtmp_", fileext = ".dat"), isfile = FALSE)
+hive(cmd, fileout = tempfile("Rtmp_", fileext = ".dat"), isfile = FALSE,
+  intern = TRUE)
 }
 \arguments{
 \item{cmd}{hive command}

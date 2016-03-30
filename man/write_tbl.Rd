@@ -6,6 +6,19 @@
 \usage{
 write_tbl(tbl, fn, sep = ",", row.names = FALSE, ...)
 }
+\arguments{
+\item{sep}{the field separator string.  Values within each row of
+    \code{x} are separated by this string.}
+
+\item{row.names}{either a logical value indicating whether the row
+    names of \code{x} are to be written along with \code{x}, or a
+    character vector of row names to be written.}
+
+\item{...}{arguments to \code{write.table}: \code{append},
+    \code{col.names}, \code{sep}, \code{dec} and \code{qmethod}
+    cannot be altered.
+  }
+}
 \description{
 write table
 }

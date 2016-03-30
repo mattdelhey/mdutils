@@ -2,7 +2,7 @@
 % Please edit documentation in R/hive.r
 \name{hive_system}
 \alias{hive_system}
-\title{run the hive system command with specific envrionment}
+\title{run the hive system command with specific envrionment as sem user}
 \usage{
 hive_system(hive_cmd, quit = FALSE, ...)
 }
@@ -10,11 +10,12 @@ hive_system(hive_cmd, quit = FALSE, ...)
 \item{hive_cmd}{command to be sent to hive}
 }
 \description{
-run the hive system command with specific envrionment
+run the hive system command with specific envrionment as sem user
 }
 \seealso{
 Other hive: \code{\link{get_disk}};
   \code{\link{get_hive_tbl}}; \code{\link{get_hive}};
+  \code{\link{hive_void_file}}; \code{\link{parse_header}};
   \code{\link{set_hive_cluster}};
   \code{\link{set_tempfile}};
   \code{\link{set_warehouse_path}}

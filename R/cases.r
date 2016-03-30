@@ -1,6 +1,8 @@
 #' case statement
 #' stolen from \textbf{memisc} package
-cases <- function(..., check.xor=c("warn","stop","ignore")){
+#' @param check.xor
+#' @export
+cases <- function(..., check.xor = c("warn","stop","ignore")){
   subst <- match.call(expand.dots=FALSE)$...
   
   if(!missing(check.xor))  

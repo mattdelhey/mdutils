@@ -7,6 +7,9 @@ stolen from \textbf{memisc} package}
 \usage{
 cases(..., check.xor = c("warn", "stop", "ignore"))
 }
+\arguments{
+\item{check.xor}{}
+}
 \description{
 case statement
 stolen from \textbf{memisc} package

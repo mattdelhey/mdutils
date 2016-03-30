@@ -19,7 +19,8 @@ set hive cluster
 \seealso{
 Other hive: \code{\link{get_disk}};
   \code{\link{get_hive_tbl}}; \code{\link{get_hive}};
-  \code{\link{hive_system}}; \code{\link{set_tempfile}};
+  \code{\link{hive_system}}; \code{\link{hive_void_file}};
+  \code{\link{parse_header}}; \code{\link{set_tempfile}};
   \code{\link{set_warehouse_path}}
 }
 

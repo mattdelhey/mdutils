@@ -10,7 +10,7 @@ hive_env$header <- FALSE
 #' @param isfile is the input a file?
 #' @return stdout
 #' @export
-hive <- function(cmd, fileout = tempfile("Rtmp_", fileext = ".dat"), isfile = FALSE) {
+hive <- function(cmd, fileout=tempfile("Rtmp_", fileext = ".dat"), isfile=FALSE, intern=TRUE) {
   ## Is entry a command or a filename?
   if (isfile) {
     hive_cmd <- sprintf("hive -f %s", cmd)
@@ -26,7 +26,7 @@ hive <- function(cmd, fileout = tempfile("Rtmp_", fileext = ".dat"), isfile = FA
     hive_system(hive_cmd)
   }
   else {
-    hive_system(hive_cmd, intern = TRUE)
+    hive_system(hive_cmd, intern=intern)
   }
 }
 
@@ -43,11 +43,13 @@ hive_void <- function(cmd, ...) {
 
 #' run hql file without return
 #' @inheritParams hive
+#' @family hive
 #' @export
 hive_void_file <- function(file) hive(file, fileout = NA, isfile = TRUE)
 
 #' parse and shift first row as header
 #' @param x dataframe
+#' @family hive
 #' @export
 parse_header <- function(x) {
   names(x) <- x[1, ]
@@ -55,8 +57,9 @@ parse_header <- function(x) {
 }
 
 #' logic for special cases
-#' @export
+#' @inheritParams base::tempfile
 #' @family hive
+#' @export
 set_tempfile <- function(tmpdir = "/tmp", fileext = ".tmp") {
   hostname <- get_hostname()
   if (hostname == "kant.dhcp.tripadvisor.com" && tmpdir == "/tmp")
@@ -70,8 +73,8 @@ set_tempfile <- function(tmpdir = "/tmp", fileext = ".tmp") {
 #' WARNING: This function will throw an error if tabs appear in field data
 #' @param qry hive query to be executed (character vector)
 #' @param init
-#' @export
 #' @family hive
+#' @export
 get_hive <- function(qry = NULL, init.qry = "", isfile = FALSE, queue = "sem",
                      fn_tmp = set_tempfile(tmpdir = "/tmp", fileext = ".dat")) {
   ## CHECK: Was a command specified?
@@ -125,19 +128,16 @@ get_hive_tbl <- function(tbl, add.qry = "", init.qry = "") {
                    paste(select.str.ori, collapse = ", "), tbl, add.qry))
 }
 
-#' run the hive system command with specific envrionment
+#' run the hive system command with specific envrionment as sem user
 #' @param hive_cmd command to be sent to hive
 #' @export
 #' @family hive
-hive_system <- function(hive_cmd, quit = FALSE, ...) {
+hive_system <- function(hive_cmd, quit=FALSE, ...) {
   path_env <- file.path(hive_env$warehouse_path, "clusters", hive_env$cluster, "config", "env.bash")
   path_cluster <- file.path(hive_env$warehouse_path, "clusters", hive_env$cluster)
   setup <- sprintf(". %s %s && ", path_env, path_cluster)
   cmd <- paste(setup, hive_cmd)
-  message(cmd)
-  ##zero_check(system2("bash", args = c("-c", shQuote(cmd)), ...), quit = quit)
-  ##zero_check(system(sprintf("sudo -E -u sem bash -c %s", cmd), ...), quit = quit)
-  ##system(sprintf("sudo -E -u sem %s", cmd), ...)
+  message(sprintf("[Running command]: \n%s", cmd))
   user <- Sys.info()["user"]
   if (user != "sem") {
     system2("sudo", c("-u sem -s bash -c", shQuote(cmd)))
@@ -165,6 +165,7 @@ set_hive_cluster <- function(cluster = c("prod", "adhoc", "cdhtest", "core", "le
 }
 
 #' get column names of a hive table for tar.hive
+#' @param tbl data.frame
 #' @export
 get_hive_header <- function(tbl) {
   data <- hive.query(sprintf("describe %s", tbl), silent = TRUE)
@@ -177,20 +178,11 @@ get_hive_header <- function(tbl) {
   column_names <- as.character(data_clean[rows, 1])
 }
 
-#' check if R process has sudo power
-#' @export
-check_sudo <- function() {  
-}
-
-#' check if adequate disk space exists
-#' @export
-check_disk <- function(path) {
-}
-
-#' get disk space
+#' get disk space on unix
 #' https://stat.ethz.ch/pipermail/r-help/2007-October/142319.html
-#' @export
+#' @param path directory
 #' @family hive
+#' @export
 get_disk <- function(path = Sys.getenv("HOME")) {
    if(length(system("which df", intern = TRUE, ignore = TRUE))) {
      cmd <- sprintf("df %s", path)
