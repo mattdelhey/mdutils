@@ -432,6 +432,8 @@ write_tbl <- function(tbl, fn, sep=",", row.names=FALSE, ...) {
 
 #' audience map
 #' generated using ini files in sem-manager data
+#' @param sem_manager director of sem-manager repo
+#' @param tamgo which tamgcos to load
 #' @export
 audience_map <- function(sem_manager="/data/sem-manager", tamgco=c("ta", "vi", "lf")) {
   raw <- do.call("rbind", lapply(tamgco, function(tg) {
@@ -441,8 +443,99 @@ audience_map <- function(sem_manager="/data/sem-manager", tamgco=c("ta", "vi", "
     tbl$tamgco <- tg
     tbl
   }))
-  clean <- raw[, c("display_name", "external_id", "aggregation_id")]
-  clean <- rbind(clean, c("all", "all", "all"), c("null", "null", "null"))
+  clean <- raw[, c("display_name", "external_id", "aggregation_id", "tamgco")]
+  clean <- rbind(clean, c("all", "all", "all", "all"), c("null", "null", "null", "all"))
+  clean$tamgco <- toupper(clean$tamgco)
   clean
 }
+
+#' viator audience map
+#' generated manually from google adwords
+#' @export
+viator_audience_map <- function() {
+  audience_name <- c(
+    ## VI_GoogleUS
+    "shoppingcart_7day"
+  , "recent_nyc"
+  , "recent_paris"
+  , "purchasers_90day"
+  , "purchasers_30day"
+  , "visitors_7day"
+  , "visitors_30day"
+  , "recent_rome"
+  , "attractions"
+    ## VI_GoogleFR      
+  , "fr_visitors_7day"
+  , "fr_visitors_30day"
+  , "fr_visitors_90day"
+  , "fr_visitors_180day"
+  , "fr_purchasers_7day"
+  , "fr_purchasers_30day"
+  , "fr_purchasers_90day"
+  , "fr_purchasers_180day"
+  , "fr_abandoners_10day"
+    ## VI_GoogleDE MISSING Visitors: 31-90 Days
+  , "de_visitors_7day"
+  , "de_visitors_30day"
+  , "de_visitors_180day"
+  , "de_purchasers_7day"
+  , "de_purchasers_30day"
+  , "de_purchasers_90day"
+  , "de_purchasers_180day"
+  , "de_abandoners_10day"
+  , "email_audience"
+    ## Across all markets
+  , "all"
+  , "null"
+  )
+  ext_audience_id <- c(
+    ## VI_GoogleUS
+    38417171
+  , 8157851
+  , 6264371
+  , 30165851
+  , 29064131
+  , 11134331
+  , 10536011
+  , 8157731
+  , 16717063
+    ## VI_GoogleFR
+  , 70147706
+  , 70147946
+  , 70154906
+  , 72045146
+  , 70160426
+  , 72046226
+  , 71799746
+  , 72045386
+  , 79366226
+    ## VI_GoogleDE
+  , 70155386
+  , 70155506
+  , 72074546
+  , 70164746
+  , 72073226
+  , 71804786
+  , 72073466
+  , 81202346
+  , 177588266
+    ## No ext_audience_id for all, null
+  )
+  audience_map <- data.frame(
+    audience_name=audience_name
+  , criteria = c(paste0("boomuserlist::", ext_audience_id), "all", "NULL")
+  , ext_audience_id = c(ext_audience_id, "all", "NULL")
+  )
+  audience_map
+}
+
+#' viator urltype map
+#' generated manually
+#' @export
+viator_urltype_map <- function() {
+  id <- c(30,51,55,56,111,117,118,119,120,121,122,123,124,125,126,127,128,130,131,132,133,136,137,138,139,140)
+  name <- c("VacationRentals","FeaturedVacationRentals","VRUKSEO","VRFRSEO","UNKNOWN","VI_Home","VI_TTD","VI_AllThingsToDo","VI_Attraction","VI_AttractionTT","VI_Travel","VI_TravelTT","VI_Group","VI_Category","VI_Product","VI_Search","VI_Review","VI_AllThingsToDoBrand","VI_AttractionBrand","VI_GroupBrand","VI_HomeBrand","VI_ProductBrand","VI_SearchBrand","VI_CategoryBrand","VI_TTDBrand","VI_TravelBrand")
+  data.frame(urltype_id = id, urltype_name = name)
+}
+
 
