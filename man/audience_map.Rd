@@ -8,6 +8,11 @@ generated using ini files in sem-manager data}
 audience_map(sem_manager = "/data/sem-manager", tamgco = c("ta", "vi",
   "lf"))
 }
+\arguments{
+\item{sem_manager}{director of sem-manager repo}
+
+\item{tamgo}{which tamgcos to load}
+}
 \description{
 audience map
 generated using ini files in sem-manager data

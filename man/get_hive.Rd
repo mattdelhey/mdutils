@@ -6,7 +6,7 @@
 WARNING: This function will throw an error if tabs appear in field data}
 \usage{
 get_hive(qry = NULL, init.qry = "", isfile = FALSE, queue = "sem",
-  fn_tmp = set_tempfile(tmpdir = "/tmp", fileext = ".dat"))
+  wait = TRUE, fn_tmp = set_tempfile(tmpdir = "/tmp", fileext = ".dat"))
 }
 \arguments{
 \item{qry}{hive query to be executed (character vector)}

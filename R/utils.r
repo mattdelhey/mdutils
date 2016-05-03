@@ -7,6 +7,14 @@ format.percent <- function(x, digits = 2, format = "f", ...) {
   paste0(formatC(100 * x, format = format, digits = digits, ...), "%")
 }
 
+#' parse date_key_new (dkn)
+#' @param dkn int vector
+#' @param format format to use
+#' @return Date object
+parse_dkn <- function(dkn, format="%Y%m%d") {
+  as.Date(as.character(dkn), format)
+}
+
 #' Sample n rows from a dataframe. Works just like head/tail.
 #' @param x Dataframe to sample.
 #' @param n Number of rows to sample.
@@ -316,6 +324,32 @@ sumlast <- function(x, l, order_by = NULL, ...) {
   sum(last, na.rm = TRUE)
 }
 
+#' average last l values
+#' @param x data.frame
+#' @param l integer number of values back to sum
+#' @param order_by character
+#' @export
+avglast <- function(x, l, order_by = NULL, ...) {
+  lag <- length(x) - (l-1)
+  use <- max(0, lag)
+  last <- dplyr::lag(x, use, default = NA, order_by = order_by, ...)
+  mean(last, na.rm = TRUE)
+}
+
+#' apply function f to last l values
+#' @param x data.frame
+#' @param f function
+#' @param l integer number of values back to sum
+#' @param order_by character
+#' @export
+flast <- function(x, f, l, order_by = NULL, ...) {
+  lag <- length(x) - (l-1)
+  use <- max(0, lag)
+  last <- dplyr::lag(x, use, default = NA, order_by = order_by, ...)
+  f(last, na.rm=TRUE)
+}
+
+
 #' extend dplyr to multiple lags
 #' @param lags vector of lags to be computed
 #' @param reduce function to reduce results
@@ -444,7 +478,7 @@ audience_map <- function(sem_manager="/data/sem-manager", tamgco=c("ta", "vi", "
     tbl
   }))
   clean <- raw[, c("display_name", "external_id", "aggregation_id", "tamgco")]
-  clean <- rbind(clean, c("all", "all", "all", "all"), c("null", "null", "null", "all"))
+  clean <- rbind(clean, c("all", "all", "all", "ALL"), c("null", "NULL", "NULL", "ALL"))
   clean$tamgco <- toupper(clean$tamgco)
   clean
 }
@@ -483,7 +517,7 @@ viator_audience_map <- function() {
   , "de_purchasers_90day"
   , "de_purchasers_180day"
   , "de_abandoners_10day"
-  , "email_audience"
+  , "de_email_audience"
     ## Across all markets
   , "all"
   , "null"

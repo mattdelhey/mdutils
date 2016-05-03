@@ -4,7 +4,7 @@
 \alias{hive_system}
 \title{run the hive system command with specific envrionment as sem user}
 \usage{
-hive_system(hive_cmd, quit = FALSE, ...)
+hive_system(hive_cmd, quit = FALSE, wait = TRUE, ...)
 }
 \arguments{
 \item{hive_cmd}{command to be sent to hive}

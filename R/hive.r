@@ -10,23 +10,24 @@ hive_env$header <- FALSE
 #' @param isfile is the input a file?
 #' @return stdout
 #' @export
-hive <- function(cmd, fileout=tempfile("Rtmp_", fileext = ".dat"), isfile=FALSE, intern=TRUE) {
+hive <- function(cmd, fileout=set_tempfile(tmpdir="/tmp", fileext=".dat"), isfile=FALSE, wait=TRUE) {
+  ##fileout=tempfile("Rtmp_", fileext = ".dat")
   ## Is entry a command or a filename?
   if (isfile) {
     hive_cmd <- sprintf("hive -f %s", cmd)
   } else {
-    fn_query <- tempfile("Rtmp_", fileext = ".tmp", tmpdir = "/tmp")
+    fn_query <- tempfile("Rtmp_", fileext=".tmp", tmpdir="/tmp")
     fail_message <- sprintf("Failed to write to temporary file: %s", fn_query)
-    zero_check(write(cmd, fn_query), quit = FALSE,  message = fail_message)
+    zero_check(write(cmd, fn_query), quit=FALSE,  message=fail_message)
     hive_cmd <- sprintf("hive -f %s", fn_query)
   }
   ## Is output to stdout of file?
   if(!is.na(fileout)) {
     hive_cmd <- paste(hive_cmd, sprintf('> %s', fileout))
-    hive_system(hive_cmd)
+    hive_system(hive_cmd, wait=wait)
   }
   else {
-    hive_system(hive_cmd, intern=intern)
+    hive_system(hive_cmd, wait=wait)
   }
 }
 
@@ -45,7 +46,7 @@ hive_void <- function(cmd, ...) {
 #' @inheritParams hive
 #' @family hive
 #' @export
-hive_void_file <- function(file) hive(file, fileout = NA, isfile = TRUE)
+hive_void_file <- function(file) hive(file, fileout=NA, isfile=TRUE)
 
 #' parse and shift first row as header
 #' @param x dataframe
@@ -75,8 +76,8 @@ set_tempfile <- function(tmpdir = "/tmp", fileext = ".tmp") {
 #' @param init
 #' @family hive
 #' @export
-get_hive <- function(qry = NULL, init.qry = "", isfile = FALSE, queue = "sem",
-                     fn_tmp = set_tempfile(tmpdir = "/tmp", fileext = ".dat")) {
+get_hive <- function(qry=NULL, init.qry="", isfile=FALSE, queue="sem", wait=TRUE,
+                     fn_tmp=set_tempfile(tmpdir="/tmp", fileext=".dat")) {
   ## CHECK: Was a command specified?
   if (is.null(qry)) log_error("Query not valid: %s", qry)
   ## Set Hive option for header
@@ -85,9 +86,9 @@ get_hive <- function(qry = NULL, init.qry = "", isfile = FALSE, queue = "sem",
   log_info("Initiating Hive query.  Storing temp results to %s", fn_tmp)
   timer_start()
   if (isfile) {
-    hive(qry, fileout = fn_tmp, isfile = TRUE)
+    hive(qry, fileout=fn_tmp, isfile=TRUE, wait=wait)
   } else {
-    hive(add_sql(init.qry, qry), fileout = fn_tmp)
+    hive(add_sql(init.qry, qry), fileout=fn_tmp, wait=wait)
   }
   log_info("Hive query completed in: %s.  Temp results stored to %s", timer_stop(), fn_tmp)
   ## Check that temp file exists and contains data
@@ -96,7 +97,7 @@ get_hive <- function(qry = NULL, init.qry = "", isfile = FALSE, queue = "sem",
   }
   ## Convert Hive output to data frame
   log_info("Converting Hive output to data frame")
-  out <- read.table(fn_tmp, header = TRUE, sep = "\t", quote = "", comment.char = "", skipNul = TRUE)
+  out <- read.table(fn_tmp, header=TRUE, sep="\t", quote="", comment.char="", skipNul=TRUE)
   ## Return data frame of Hive results
   log_info("Returning data frame containing %s rows and %s columns", nrow(out), ncol(out))
   return(out)
@@ -132,7 +133,7 @@ get_hive_tbl <- function(tbl, add.qry = "", init.qry = "") {
 #' @param hive_cmd command to be sent to hive
 #' @export
 #' @family hive
-hive_system <- function(hive_cmd, quit=FALSE, ...) {
+hive_system <- function(hive_cmd, quit=FALSE, wait=TRUE, ...) {
   path_env <- file.path(hive_env$warehouse_path, "clusters", hive_env$cluster, "config", "env.bash")
   path_cluster <- file.path(hive_env$warehouse_path, "clusters", hive_env$cluster)
   setup <- sprintf(". %s %s && ", path_env, path_cluster)
@@ -140,9 +141,9 @@ hive_system <- function(hive_cmd, quit=FALSE, ...) {
   message(sprintf("[Running command]: \n%s", cmd))
   user <- Sys.info()["user"]
   if (user != "sem") {
-    system2("sudo", c("-u sem -s bash -c", shQuote(cmd)))
+    system2("sudo", c("-u sem -s bash -c", shQuote(cmd)), wait=wait, ...)
   } else {
-    system2("bash", c("-c", shQuote(cmd)))
+    system2("bash", c("-c", shQuote(cmd)), wait=wait, ...)
   }
 }
 
@@ -184,9 +185,9 @@ get_hive_header <- function(tbl) {
 #' @family hive
 #' @export
 get_disk <- function(path = Sys.getenv("HOME")) {
-   if(length(system("which df", intern = TRUE, ignore = TRUE))) {
+   if(length(system("which df", intern=TRUE, ignore=TRUE))) {
      cmd <- sprintf("df %s", path)
-     exec <- system(cmd, intern = TRUE, ignore = TRUE)
+     exec <- system(cmd, intern=TRUE, ignore=TRUE)
      exec <- strsplit(exec[length(exec)], "[ ]+")[[1]]
      exec <- as.numeric(exec[3:4])
      structure(exec, names = c("used", "available"))
