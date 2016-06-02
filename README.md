@@ -7,7 +7,7 @@ Installation
 -----------
 ```R
 # install.packages("devtools")
-devtools::install_github("mattdelhey/mdutils")
+devtools::install_git("https://gitlab01d.d.tripadvisor.com/mdelhey/mdutils.git")
 ```
 
 Author
