@@ -508,9 +508,10 @@ viator_audience_map <- function() {
   , "fr_purchasers_90day"
   , "fr_purchasers_180day"
   , "fr_abandoners_10day"
-    ## VI_GoogleDE MISSING Visitors: 31-90 Days
+    ## VI_GoogleDE
   , "de_visitors_7day"
   , "de_visitors_30day"
+  , "de_visiotrs_90day" ## paused
   , "de_visitors_180day"
   , "de_purchasers_7day"
   , "de_purchasers_30day"
@@ -518,6 +519,36 @@ viator_audience_map <- function() {
   , "de_purchasers_180day"
   , "de_abandoners_10day"
   , "de_email_audience"
+    ## VI_GoogleES
+  , "es_visitors_7day"
+  , "es_visitors_30day"
+  , "es_visitors_90day"
+  , "es_visitors_180day"
+  , "es_purchasers_7day"
+  , "es_purchasers_30day"
+  , "es_purchasers_90day"
+  , "es_purchasers_180day"
+  , "es_abandoners_30day"
+  , "es_email_audience"
+    ## VI_GoogleIT
+  , "it_visitors_all"
+  , "it_visitors_90day"
+  ##, "it_purchasers_30day"
+  ##, "it_purchasers_180day"
+  , "it_abandoners_90day"
+  , "it_email_audience"
+    ## VI_GoogleSE
+  , "se_visitors_all"
+  , "se_visitors_180day"
+  , "se_purchasers_30day"
+  , "se_purchasers_180day"
+  , "se_abandoners_90day"
+    ## VI_GoogleDK [commented out audiences that are too small]
+  , "dk_visitors_all"
+  ##, "dk_visitors_180day"
+  ##, "dk_purchasers_30day"
+  ##, "dk_purchasers_180day"
+  ##, "dk_abandoners_30day"
     ## Across all markets
   , "all"
   , "null"
@@ -546,6 +577,7 @@ viator_audience_map <- function() {
     ## VI_GoogleDE
   , 70155386
   , 70155506
+  , 70156226
   , 72074546
   , 70164746
   , 72073226
@@ -553,6 +585,36 @@ viator_audience_map <- function() {
   , 72073466
   , 81202346
   , 177588266
+    ## VI_GoogleES
+  , 56685252
+  , 56685372
+  , 56685612
+  , 178367292
+  , 59969292
+  , 59969412
+  , 178368132
+  , 178368372
+  , 56683812
+  , 183278772
+    ## VI_GoogleIT
+  , 29932403
+  , 35289803
+  ##, 35288363
+  ##, 52469363
+  , 54093923
+  , 57040283
+    ## VI_GoogleSE
+  , 96177059
+  , 114282179
+  , 101314259
+  , 114282299
+  , 118219739
+    ## VI_GoogleDK
+  , 39011364
+  ##, 54498564
+  ##, 44694444
+  ##, 54498804
+  ##, 44696604
     ## No ext_audience_id for all, null
   )
   audience_map <- data.frame(
