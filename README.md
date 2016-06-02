@@ -12,4 +12,6 @@ devtools::install_github("mattdelhey/mdutils")
 
 Author
 --------
-Matt Delhey: [email](mailto:matt.delhey@rice.edu), [website](http://mattdelhey.com).
+[Matthew Delhey](mailto:matt.delhey@gmail.com)
+
+
